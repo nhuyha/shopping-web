@@ -1,7 +1,15 @@
-"use client";
+"use client"
 import React from "react";
+import { Localized, useLocalization } from "@fluent/react"
+type Product = { 
+  id: number,
+  name: string, 
+  price: number,
+  image: string,
+};
 
 function MainComponent() {
+  const localization = useLocalization()
   const [products, setProducts] = React.useState([
     {
       id: 1,
@@ -22,7 +30,7 @@ function MainComponent() {
       image: "/images/speaker.jpg",
     },
   ]);
-  const [cart, setCart] = React.useState([]);
+  const [cart, setCart] = React.useState<(Product & { quantity: number })[]>([]);
   const [search, setSearch] = React.useState("");
   const [showCart, setShowCart] = React.useState(false);
 
@@ -30,7 +38,7 @@ function MainComponent() {
     product.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const addToCart = (product) => {
+  const addToCart = (product: Product) => {
     const productExists = cart.find((item) => item.id === product.id);
     if (productExists) {
       setCart(
@@ -45,6 +53,22 @@ function MainComponent() {
     }
   };
 
+  const removeFromCart = (productId: number) => {
+    const updatedCart = cart.filter((item) => item.id !== productId);
+    setCart(updatedCart);
+  };
+
+  const adjustQuantity = (productId: number, newQuantity: number) => {
+    if (newQuantity === 0) {
+      removeFromCart(productId);
+    } else {
+      const updatedCart = cart.map((item) =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      );
+      setCart(updatedCart);
+    }
+  };
+
   const handleCartClick = () => {
     setShowCart(true);
   };
@@ -54,7 +78,7 @@ function MainComponent() {
   };
 
   const noProductsMessage =
-    search && filteredProducts.length === 0 ? <p>No products found.</p> : null;
+    search && filteredProducts.length === 0 ? <p><Localized id="noProductsFound">No products found.</Localized></p> : null;
 
   return (
     <div className="w-full min-h-screen bg-[#f0f0f0] font-roboto">
@@ -67,7 +91,7 @@ function MainComponent() {
             className="w-full p-2 rounded text-black bg-white"
             type="search"
             name="searchProduct"
-            placeholder="Search products"
+            placeholder={localization.l10n.getString("searchProducts")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -82,7 +106,7 @@ function MainComponent() {
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {showCart ? (
           <div className="col-span-full bg-white p-4">
-            <h2 className="text-lg font-semibold mb-4">Cart Items:</h2>
+            <h2 className="text-lg font-semibold mb-4"><Localized id="cart-items">Cart Items:</Localized></h2>
             <ul>
               {cart.map((item) => (
                 <li
@@ -92,15 +116,20 @@ function MainComponent() {
                   <div className="flex items-center gap-4">
                     <img
                       src={item.image}
-                      alt={`Image of ${item.name}`}
+                      alt={item.name}
                       className="w-20 h-20 object-cover"
                     />
                     <span>{item.name}</span>
                   </div>
-                  <span>Quantity: {item.quantity}</span>
+                  <div>
+                    <button onClick={() => adjustQuantity(item.id, item.quantity - 1)}>-</button>
+                    <span><Localized id="quantity"></Localized>: {item.quantity}</span>
+                    <button onClick={() => adjustQuantity(item.id, item.quantity + 1)}>+</button>
+                    <button onClick={() => removeFromCart(item.id)}>Remove</button>
+                  </div>
                 </li>
               ))}
-              {cart.length === 0 && <li>Your cart is empty.</li>}
+              {cart.length === 0 && <li><Localized id="your-cart-is-empty"></Localized></li>}
             </ul>
           </div>
         ) : (
@@ -113,7 +142,7 @@ function MainComponent() {
               >
                 <img
                   src={product.image}
-                  alt={`${product.name} product image`}
+                  alt={product.name}
                   className="w-full h-[200px] object-cover"
                 />
                 <div className="p-4">
@@ -125,7 +154,7 @@ function MainComponent() {
                     onClick={() => addToCart(product)}
                     className="mt-3 bg-[#4caf50] text-white rounded px-6 py-2 hover:bg-[#45a045] active:bg-[#43a047] transition duration-150 ease-in-out"
                   >
-                    Add to Cart
+                    <Localized id="add-to-cart"></Localized>
                   </button>
                 </div>
               </div>
@@ -133,9 +162,6 @@ function MainComponent() {
           </>
         )}
       </main>
-      <footer className="bg-[#1a73e8] p-4 text-center text-white">
-        © 2023 Online Marketplace
-      </footer>
     </div>
   );
 }

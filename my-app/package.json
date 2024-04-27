@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fluent/bundle": "^0.18.0",
+    "@fluent/langneg": "^0.7.0",
+    "@fluent/react": "^0.15.2",
+    "intl-pluralrules": "^2.0.1",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
