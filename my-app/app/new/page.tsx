@@ -2,116 +2,211 @@
 import React from "react";
 
 function MainComponent() {
+  const [products, setProducts] = React.useState([
+    {
+      id: 1,
+      name: "Water Bottle",
+      imageUrl: "images/water_bottle.jpg",
+      detail: "Holds 1 liter, BPA free",
+      price: 15,
+    },
+  ]);
+  const [selectedProduct, setSelectedProduct] = React.useState(null);
   const [selectedOrder, setSelectedOrder] = React.useState(null);
-
-  const orders = [
+  const [orders, setOrders] = React.useState([
     {
       id: 1,
       buyer: "Alice Johnson",
       deliveryAddress: "78 Wonderland Ave, Fantasia",
       phoneNumber: "555-123-4567",
-      productName: "Water Bottle",
-      productQuantity: 5,
-      productPrice: 15,
+      items: [
+        {
+          productId: 1,
+          quantity: 5,
+          price: 15,
+        },
+      ],
       totalOrderPrice: 75,
       status: "Shipped",
     },
-    {
-      id: 2,
-      buyer: "Bob Smith",
-      deliveryAddress: "123 Dreamland Road, Neverland",
-      phoneNumber: "555-987-6543",
-      productName: "Water Bottle",
-      productQuantity: 3,
-      productPrice: 15,
-      totalOrderPrice: 45,
-      status: "Pending",
-    },
-    {
-      id: 3,
-      buyer: "Charlie Black",
-      deliveryAddress: "456 Mystic Falls, Narnia",
-      phoneNumber: "555-789-1234",
-      productName: "Water Bottle",
-      productQuantity: 10,
-      productPrice: 15,
-      totalOrderPrice: 150,
-      status: "Delivered",
-    },
-  ];
+  ]);
+
+  const updateOrderStatus = (id, newStatus) => {
+    const updatedOrders = orders.map((order) =>
+      order.id === id ? { ...order, status: newStatus } : order
+    );
+    setOrders(updatedOrders);
+  };
+
+  const updateProduct = (id, name, imageUrl, detail, price) => {
+    const updatedProducts = products.map((product) =>
+      product.id === id
+        ? { ...product, name, imageUrl, detail, price }
+        : product
+    );
+    setProducts(updatedProducts);
+  };
+
+  const addProduct = (name, imageUrl, detail, price) => {
+    const newProduct = {
+      id: products.length + 1,
+      name,
+      imageUrl,
+      detail,
+      price,
+    };
+    setProducts([...products, newProduct]);
+  };
+
+  const deleteProduct = (id) => {
+    const filteredProducts = products.filter((product) => product.id !== id);
+    setProducts(filteredProducts);
+  };
+
+  const handleProductSelection = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const handleOrderSelection = (order) => {
+    setSelectedOrder(order);
+  };
+
+  const handleProductUpdate = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    updateProduct(
+      selectedProduct.id,
+      form.get("name"),
+      form.get("imageUrl"),
+      form.get("detail"),
+      form.get("price")
+    );
+  };
+
+  const handleAddProduct = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    addProduct(
+      form.get("name"),
+      form.get("imageUrl"),
+      form.get("detail"),
+      form.get("price")
+    );
+    event.target.reset();
+  };
 
   return (
     <div className="font-roboto">
       <h1 className="text-2xl font-bold mb-4 text-center">Seller Dashboard</h1>
       <div className="flex flex-wrap justify-center gap-10 p-4">
-        <div className="bg-[#f7f7f7] p-6 rounded-lg shadow-lg max-w-md">
-          <h2 className="text-xl font-bold mb-6">Post Product</h2>
-          <form className="space-y-4">
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="productName"
-              >
-                Product Name
-              </label>
-              <input
-                name="productName"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-              />
-            </div>
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="productPrice"
-              >
-                Price
-              </label>
-              <input
-                name="productPrice"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-              />
-            </div>
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="productImage"
-              >
-                Product Image
-              </label>
-              <input
-                name="productImage"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="file"
-                accept="image/*"
-              />
-            </div>
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md">
+          <h2 className="text-xl font-bold mb-6">Product Management</h2>
+          <form onSubmit={handleAddProduct}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Product name"
+              className="border p-1 rounded"
+              required
+            />
+            <input
+              type="text"
+              name="imageUrl"
+              placeholder="Image URL"
+              className="border p-1 rounded"
+              required
+            />
+            <textarea
+              name="detail"
+              placeholder="Details"
+              className="border p-1 rounded"
+              required
+            />
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              className="border p-1 rounded"
+              required
+            />
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              Submit
+              Add Product
             </button>
           </form>
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="my-4 p-4 border-b cursor-pointer"
+              onClick={() => handleProductSelection(product)}
+            >
+              <img
+                src={product.imageUrl}
+                alt={`Image of ${product.name}`}
+                className="h-20 my-2"
+              />
+              <p>Name: {product.name}</p>
+              <p>Details: {product.detail}</p>
+              <p>Price: ${product.price}</p>
+              <button
+                className="text-red-500"
+                onClick={() => deleteProduct(product.id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+          {selectedProduct && (
+            <form onSubmit={handleProductUpdate}>
+              <input
+                type="text"
+                name="name"
+                className="border p-1 rounded"
+                defaultValue={selectedProduct.name}
+              />
+              <input
+                type="text"
+                name="imageUrl"
+                className="border p-1 rounded"
+                defaultValue={selectedProduct.imageUrl}
+              />
+              <textarea
+                name="detail"
+                className="border p-1 rounded"
+                defaultValue={selectedProduct.detail}
+              />
+              <input
+                type="number"
+                name="price"
+                className="border p-1 rounded"
+                defaultValue={selectedProduct.price}
+              />
+              <button
+                type="submit"
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Update
+              </button>
+            </form>
+          )}
         </div>
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md">
           <h2 className="text-xl font-bold mb-6">Order Management</h2>
-          <div>
-            {orders.map((order) => (
-              <div
-                key={order.id}
-                className="p-4 mb-2 border-b"
-                onClick={() => setSelectedOrder(order)}
-              >
-                <p>Order ID: {order.id}</p>
-                <p>Price: {order.productPrice}</p>
-                <p>Status: {order.status}</p>
-              </div>
-            ))}
-          </div>
+          {orders.map((order) => (
+            <div
+              key={order.id}
+              className="p-4 mb-2 border-b cursor-pointer"
+              onClick={() => handleOrderSelection(order)}
+            >
+              <p>Order ID: {order.id}</p>
+              <p>Total Price: ${order.totalOrderPrice}</p>
+              <p>Status: {order.status}</p>
+            </div>
+          ))}
           {selectedOrder && (
-            <div className="mt-6">
+            <div>
               <h3 className="text-lg font-bold mb-4">Order Details</h3>
               <p>
                 Name:{" "}
@@ -129,30 +224,42 @@ function MainComponent() {
                   {selectedOrder.phoneNumber}
                 </span>
               </p>
-              <p>
-                Product Name:{" "}
-                <span className="font-semibold">
-                  {selectedOrder.productName}
-                </span>
-              </p>
-              <p>
-                Quantity:{" "}
-                <span className="font-semibold">
-                  {selectedOrder.productQuantity}
-                </span>
-              </p>
-              <p>
-                Price per item:{" "}
-                <span className="font-semibold">
-                  {selectedOrder.productPrice}
-                </span>
-              </p>
+              {selectedOrder.items.map((item, index) => (
+                <div key={index}>
+                  <p>
+                    Product Name:{" "}
+                    <span className="font-semibold">
+                      {products.find((p) => p.id === item.productId).name}
+                    </span>
+                  </p>
+                  <p>
+                    Quantity:{" "}
+                    <span className="font-semibold">{item.quantity}</span>
+                  </p>
+                  <p>
+                    Price per item:{" "}
+                    <span className="font-semibold">${item.price}</span>
+                  </p>
+                </div>
+              ))}
               <p>
                 Total Order Price:{" "}
                 <span className="font-semibold">
                   ${selectedOrder.totalOrderPrice}
                 </span>
               </p>
+              <button
+                onClick={() => updateOrderStatus(selectedOrder.id, "Delivered")}
+                className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Mark as Delivered
+              </button>
+              <button
+                onClick={() => updateOrderStatus(selectedOrder.id, "Shipped")}
+                className="mt-4 ml-4 bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Mark as Shipped
+              </button>
             </div>
           )}
         </div>

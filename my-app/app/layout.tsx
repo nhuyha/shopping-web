@@ -36,7 +36,7 @@ function* generateBundles(userLocales: readonly string[]) {
 
 // The ReactLocalization instance stores and caches the sequence of generated
 // bundles. You can store it in your app's state.
-let l10n = new ReactLocalization(generateBundles(['vi-VN']));
+let l10n = new ReactLocalization(generateBundles(['en-US']));
 
 const inter = Inter({ subsets: ["latin"] });
 
