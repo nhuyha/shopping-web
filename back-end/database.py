@@ -93,7 +93,6 @@ def them_san_pham(ten,anh, mo_ta, gia, so_luong):
 
     # Lấy khóa chính của sản phẩm vừa được thêm vào
     product_id = cursor.lastrowid
-
     # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
     conn.commit()
 
@@ -236,6 +235,6 @@ def xoa_bot_1_san_pham(customer_id, product_id):
 
 def danh_sach_san_pham():
     cursor.execute('''
-    SELECT ProductID from Products ''' )
+    SELECT ProductID,Name,Image,Description, Price from Products ''' )
     rows = cursor.fetchall()
     return rows

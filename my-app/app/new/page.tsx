@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React,{ useState, useEffect } from "react";
+
 type Product = {
   id: number,
   name: string,
@@ -23,15 +24,22 @@ type Order ={
   status: string,
 };
 function MainComponent() {
-  const [products, setProducts] = React.useState([
-    {
-      id: 1,
-      name: "Water Bottle",
-      imageUrl: "images/water_bottle.jpg",
-      detail: "Holds 1 liter, BPA free",
-      price: 15,
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setProducts(data);
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+        });
+}, []);
   const [selectedProduct, setSelectedProduct] = React.useState<(Product)>();
   const [selectedOrder, setSelectedOrder] = React.useState<(Order)>();
   const [orders, setOrders] = React.useState<Order[]>([
