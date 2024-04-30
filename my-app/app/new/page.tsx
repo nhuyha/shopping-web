@@ -1,6 +1,27 @@
 "use client";
 import React from "react";
-
+type Product = {
+  id: number,
+  name: string,
+  imageUrl: string,
+  detail: string,
+  price: number
+};
+type Order ={
+  id: number,
+  buyer: string,
+  deliveryAddress: string,
+  phoneNumber: string,
+  items: [
+        {
+          productId: number,
+          quantity: number,
+          price: number,
+        },
+      ],
+  totalOrderPrice: number,
+  status: string,
+};
 function MainComponent() {
   const [products, setProducts] = React.useState([
     {
@@ -11,8 +32,8 @@ function MainComponent() {
       price: 15,
     },
   ]);
-  const [selectedProduct, setSelectedProduct] = React.useState(null);
-  const [selectedOrder, setSelectedOrder] = React.useState(null);
+  const [selectedProduct, setSelectedProduct] = React.useState<(Product)>();
+  const [selectedOrder, setSelectedOrder] = React.useState<(Order)>();
   const [orders, setOrders] = React.useState([
     {
       id: 1,
@@ -31,14 +52,14 @@ function MainComponent() {
     },
   ]);
 
-  const updateOrderStatus = (id, newStatus) => {
+  const updateOrderStatus = (id:number, newStatus:string) => {
     const updatedOrders = orders.map((order) =>
       order.id === id ? { ...order, status: newStatus } : order
     );
     setOrders(updatedOrders);
   };
 
-  const updateProduct = (id, name, imageUrl, detail, price) => {
+  const updateProduct = (id:number, name:string, imageUrl:string, detail:string, price:number) => {
     const updatedProducts = products.map((product) =>
       product.id === id
         ? { ...product, name, imageUrl, detail, price }
@@ -47,7 +68,7 @@ function MainComponent() {
     setProducts(updatedProducts);
   };
 
-  const addProduct = (name, imageUrl, detail, price) => {
+  const addProduct = (name:string, imageUrl:string, detail:string, price:number) => {
     const newProduct = {
       id: products.length + 1,
       name,
@@ -58,24 +79,24 @@ function MainComponent() {
     setProducts([...products, newProduct]);
   };
 
-  const deleteProduct = (id) => {
+  const deleteProduct = (id:number) => {
     const filteredProducts = products.filter((product) => product.id !== id);
     setProducts(filteredProducts);
   };
 
-  const handleProductSelection = (product) => {
+  const handleProductSelection = (product:Product) => {
     setSelectedProduct(product);
   };
 
-  const handleOrderSelection = (order) => {
+  const handleOrderSelection = (order:Order) => {
     setSelectedOrder(order);
   };
 
-  const handleProductUpdate = (event) => {
+  const handleProductUpdate = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = new FormData(event.target);
+    const form = event.currentTarget;
     updateProduct(
-      selectedProduct.id,
+      selectedProduct!.id,
       form.get("name"),
       form.get("imageUrl"),
       form.get("detail"),
@@ -83,16 +104,16 @@ function MainComponent() {
     );
   };
 
-  const handleAddProduct = (event) => {
+  const handleAddProduct = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = new FormData(event.target);
+    const form = event.currentTarget;
     addProduct(
       form.get("name"),
       form.get("imageUrl"),
       form.get("detail"),
       form.get("price")
     );
-    event.target.reset();
+    form.reset();
   };
 
   return (
