@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 # Kết nối đến cơ sở dữ liệu SQLite (nếu tệp không tồn tại, nó sẽ được tạo ra tự động)
-conn = sqlite3.connect('shopping.db')
+conn = sqlite3.connect('shopping.db',check_same_thread=False)
 cursor = conn.cursor()
 
 # Tạo bảng Sản phẩm (Products)
@@ -233,3 +233,9 @@ def them_san_pham_vao_gio_hang(customer_id, product_id, quantity):
 def xoa_bot_1_san_pham(customer_id, product_id):
   new_quantity=in_so_luong_san_pham_trong_gio_hang(customer_id,product_id)-1
   thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity)
+
+def danh_sach_san_pham():
+    cursor.execute('''
+    SELECT ProductID from Products ''' )
+    rows = cursor.fetchall()
+    return rows

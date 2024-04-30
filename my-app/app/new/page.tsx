@@ -34,7 +34,7 @@ function MainComponent() {
   ]);
   const [selectedProduct, setSelectedProduct] = React.useState<(Product)>();
   const [selectedOrder, setSelectedOrder] = React.useState<(Order)>();
-  const [orders, setOrders] = React.useState([
+  const [orders, setOrders] = React.useState<Order[]>([
     {
       id: 1,
       buyer: "Alice Johnson",
@@ -95,25 +95,26 @@ function MainComponent() {
   const handleProductUpdate = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    const formData = new FormData(form);
     updateProduct(
       selectedProduct!.id,
-      form.get("name"),
-      form.get("imageUrl"),
-      form.get("detail"),
-      form.get("price")
+      formData.get("name"),
+      formData.get("imageUrl"),
+      formData.get("detail"),
+      formData.get("price")
     );
   };
 
   const handleAddProduct = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
+    const form = new FormData(event.currentTarget);
     addProduct(
       form.get("name"),
       form.get("imageUrl"),
       form.get("detail"),
       form.get("price")
     );
-    form.reset();
+    event.currentTarget.reset();
   };
 
   return (
@@ -250,7 +251,7 @@ function MainComponent() {
                   <p>
                     Product Name:{" "}
                     <span className="font-semibold">
-                      {products.find((p) => p.id === item.productId).name}
+                      {products.find((p) => p.id === item.productId)!.name}
                     </span>
                   </p>
                   <p>
