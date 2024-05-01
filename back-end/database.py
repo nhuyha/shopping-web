@@ -99,13 +99,14 @@ def them_san_pham(ten,anh, mo_ta, gia, so_luong):
     return product_id
 
 def xoa_san_pham(product_id):
-        # Thực thi truy vấn SQL để xóa sản phẩm dựa trên ProductID
+    # Thực thi truy vấn SQL để cập nhật cờ Deleted của sản phẩm dựa trên ProductID
     cursor.execute('''
-        DELETE FROM Products
+        UPDATE Products
+        SET Deleted = 1
         WHERE ProductID = ?
     ''', (product_id,))
 
-    # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
+    # Lưu các thay đổi vào cơ sở dữ liệu
     conn.commit()
 
 def chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi, so_luong_moi):
@@ -144,44 +145,36 @@ def them_khach_hang(ten,email,address,phone):
   conn.commit()
   return customer_id
 
-
-
-def them_don_hang(customer_id, total_amount, status):
-    
-    # Lấy thời gian hiện tại
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    # Thực thi truy vấn SQL để chèn đơn hàng mới vào bảng Orders
+def khach_hang_chinh_sua_thong_tin(CustomerID,CustomerName,Email,Address,PhoneNumber):
     cursor.execute('''
-        INSERT INTO Orders (CustomerID, OrderDate, TotalAmount, Status)
-        VALUES (?, ?, ?, ?)
-    ''', (customer_id, current_time, total_amount, status))
-
-    # Lấy ID của đơn hàng vừa được thêm vào
-    order_id = cursor.lastrowid
-
-    # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
+        UPDATE Customers
+        SET CustomerName = ?,
+            Email=?,
+            Address=?,
+            PhoneNumber=?
+            
+        WHERE CustomerID = ?
+    ''', (CustomerName,Email,Address,PhoneNumber,CustomerID))
     conn.commit()
-    return order_id
 
-def xoa_san_pham_khoi_gio_hang(customer_id, product_id):
+def khach_hang_xoa_san_pham_khoi_gio_hang(customer_id, product_id):
 
     # Thực thi truy vấn SQL để xóa sản phẩm khỏi bảng ShoppingCart
     cursor.execute('''
-        DELETE FROM ShoppingCart
+        DELETE FROM Cart
         WHERE CustomerID = ? AND ProductID = ?
     ''', (customer_id, product_id))
 
     # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
     conn.commit()
 
-def thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity):
+def khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity):
     if (new_quantity==0):
-      xoa_san_pham_khoi_gio_hang(customer_id, product_id)
+      return khach_hang_xoa_san_pham_khoi_gio_hang(customer_id, product_id)
     else:
     # Thực thi truy vấn SQL để cập nhật số lượng sản phẩm trong giỏ hàng
       cursor.execute('''
-        UPDATE ShoppingCart
+        UPDATE Cart
         SET Quantity = ?
         WHERE CustomerID = ? AND ProductID = ?
     ''', (new_quantity, customer_id, product_id))
@@ -193,7 +186,7 @@ def kiem_tra_san_pham_trong_gio_hang(customer_id, product_id):
     # Thực thi truy vấn SQL để kiểm tra sản phẩm trong giỏ hàng
     cursor.execute('''
         SELECT COUNT(*)
-        FROM ShoppingCart
+        FROM Cart
         WHERE CustomerID = ? AND ProductID = ?
     ''', (customer_id, product_id))
 
@@ -207,34 +200,99 @@ def in_so_luong_san_pham_trong_gio_hang(customer_id,product_id):
     # Thực thi truy vấn SQL để lấy số lượng sản phẩm trong giỏ hàng của khách hàng
     cursor.execute('''
         SELECT Quantity
-        FROM ShoppingCart
+        FROM Cart
         WHERE CustomerID = ? AND ProductID=?
     ''', (customer_id,product_id))
 
     # Lấy kết quả của truy vấn
     rows = cursor.fetchall()
-    return rows[0]
+    return rows[0][0]
 
-def them_san_pham_vao_gio_hang(customer_id, product_id, quantity):
+def khach_hang_them_1_san_pham_vao_gio_hang(customer_id, product_id):
   if(kiem_tra_san_pham_trong_gio_hang(customer_id, product_id)):
-    new_quantity=in_so_luong_san_pham_trong_gio_hang(customer_id,product_id)+quantity
-    thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity)
+    new_quantity=in_so_luong_san_pham_trong_gio_hang(customer_id,product_id)+1
+    khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity)
   else:
 
     # Thực thi truy vấn SQL để chèn sản phẩm vào bảng ShoppingCart
     cursor.execute('''
-        INSERT INTO ShoppingCart (CustomerID, ProductID, Quantity)
-        VALUES (?, ?, ?, ?)
-    ''', (customer_id, product_id, quantity))
+        INSERT INTO Cart (CustomerID, ProductID, Quantity)
+        VALUES (?, ?, ?)
+    ''', (customer_id, product_id, 1))
     # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
     conn.commit()
 
-def xoa_bot_1_san_pham(customer_id, product_id):
+def khach_hang_xoa_bot_1_san_pham(customer_id, product_id):
+  if(in_so_luong_san_pham_trong_gio_hang(customer_id, product_id)==1):
+    return khach_hang_xoa_san_pham_khoi_gio_hang(customer_id, product_id)
   new_quantity=in_so_luong_san_pham_trong_gio_hang(customer_id,product_id)-1
-  thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity)
+  khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity)
 
 def danh_sach_san_pham():
     cursor.execute('''
     SELECT ProductID,Name,Image,Description, Price from Products ''' )
+    rows = cursor.fetchall()
+    return rows
+
+
+def danh_sach_don_hang():
+    cursor.execute('''
+    SELECT o.OrderID, o.TotalAmount, o.Status,
+     c.CustomerName, c.Address, c.PhoneNumber, od.ProductID, od.Quantity
+    FROM Orders o
+    JOIN Customers c ON o.CustomerID = c.CustomerID
+    JOIN OrderDetails od ON o.OrderID = od.OrderID
+    ''')
+    rows = cursor.fetchall()
+    return rows
+
+
+
+def du_lieu_gio_hang(CustomerID):
+    cursor.execute('''
+    SELECT c.ProductID, c.Quantity, p.Name,p.Price, p.Image
+    FROM Cart c
+    JOIN Products p ON c.ProductID = p.ProductID
+    WHERE c.CustomerID = ?
+    ''', (CustomerID))
+    rows = cursor.fetchall()
+    return rows
+
+def khach_hang_them_don_hang(CustomerID):
+    OrderDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    Status="Preparing"
+    TotalAmount=0
+    gio_hang=du_lieu_gio_hang(CustomerID)
+
+    for san_pham in gio_hang:
+        TotalAmount=TotalAmount+san_pham[1]*san_pham[3]
+    cursor.execute('''
+        INSERT INTO Orders (CustomerID, OrderDate,TotalAmount,Status)
+        VALUES (?, ?, ?, ?)
+    ''', (CustomerID, OrderDate,TotalAmount,Status))
+    OrderID = cursor.lastrowid
+
+    for san_pham in gio_hang:
+        ProductID=san_pham[0]
+        Quantily=san_pham[1]
+        Price=san_pham[3]
+        cursor.execute('''
+            INSERT INTO OrderDetails (OrderID,ProductID,Quantily,Price)
+            VALUES (?, ?, ?, ?)
+        ''', ( OrderID,ProductID,Quantily,Price))
+
+    conn.commit()
+    return OrderID
+
+def khach_hang_xoa_gio_hang(customer_id):
+    cursor.execute('''
+        DELETE * FROM Cart
+        WHERE CustomerID=?
+        ''',(customer_id))
+    conn.commit()
+
+def danh_sach_khach_hang():
+    cursor.execute('''
+    SELECT * from Customers ''' )
     rows = cursor.fetchall()
     return rows
