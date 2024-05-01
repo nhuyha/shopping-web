@@ -28,7 +28,7 @@ class Order:
         self.status = status
 
 class Cart:
-    def __init__ (self, product_id, product_name, product_price, product_image, product_quantity):
+    def __init__ (self, product_id:int, product_name:str, product_price:int, product_image:str, product_quantity:int):
         self.product_id=product_id
         self.product_name=product_name
         self.price=product_price
@@ -36,7 +36,7 @@ class Cart:
         self.product_quantity=product_quantity
 
 class Customer:
-    def __init__ (self,CustomerID, CustomerName,Email,Address,PhoneNumber ):
+    def __init__ (self,CustomerID:int, CustomerName:str,Email:str,Address:str,PhoneNumber:str ):
         self.CustomerID=CustomerID
         self.CustomerName=CustomerName
         self.Email=Email
@@ -73,35 +73,35 @@ def xoa_san_pham(product_id:int):
     return database.xoa_san_pham(product_id)
 
 @app.put("/chinh_sua_san_pham")
-def chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi, so_luong_moi):
+def chinh_sua_san_pham(product_id:int, ten_moi:str,anh_moi:str, mo_ta_moi:str, gia_moi:int , so_luong_moi:int):
     return database.chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi, so_luong_moi)
 @app.put("/cap_nhat_tinh_trang_don_hang")
 
-def cap_nhat_tinh_trang_don_hang(order_id, trang_thai_moi):
+def cap_nhat_tinh_trang_don_hang(order_id:int, trang_thai_moi:str):
     return database.cap_nhat_tinh_trang_don_hang(order_id, trang_thai_moi)
 
 @app.put("/them_khach_hang")
-def them_khach_hang(ten,email,address,phone):
+def them_khach_hang(ten:str,email:str,address:str,phone:str):
     return database.them_khach_hang(ten,email,address,phone)
 
 @app.put("/khach_hang_chinh_sua_thong_tin")
-def khach_hang_chinh_sua_thong_tin(CustomerID,CustomerName,Email,Address,PhoneNumber):
+def khach_hang_chinh_sua_thong_tin(CustomerID:int,CustomerName:str,Email:str,Address:str,PhoneNumber:str):
     return database.khach_hang_chinh_sua_thong_tin(CustomerID,CustomerName,Email,Address,PhoneNumber)
 
 @app.put("/khach_hang_xoa_san_pham_khoi_gio_hang")
-def khach_hang_xoa_san_pham_khoi_gio_hang(customer_id, product_id):
+def khach_hang_xoa_san_pham_khoi_gio_hang(customer_id:int, product_id:int):
     return database.khach_hang_xoa_san_pham_khoi_gio_hang(customer_id,product_id)
 
 @app.put("/khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang")
-def khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity):
+def khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id:int, product_id:int, new_quantity:int):
     return database.khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity)
 
 @app.put("/khach_hang_them_1_san_pham_vao_gio_hang")
-def khach_hang_them_1_san_pham_vao_gio_hang(customer_id, product_id):
+def khach_hang_them_1_san_pham_vao_gio_hang(customer_id:int, product_id:int):
     return database.khach_hang_them_1_san_pham_vao_gio_hang(customer_id, product_id)
 
 @app.put("/khach_hang_xoa_bot_1_san_pham")
-def khach_hang_xoa_bot_1_san_pham(customer_id, product_id):
+def khach_hang_xoa_bot_1_san_pham(customer_id:int, product_id:int):
     return database.khach_hang_xoa_bot_1_san_pham(customer_id, product_id)
 
 @app.get("/danh_sach_don_hang")
@@ -125,7 +125,7 @@ def danh_sach_don_hang():
     return list(orders.values())
 
 @app.get("/du_lieu_gio_hang")
-def du_lieu_gio_hang(CustomerID):
+def du_lieu_gio_hang(CustomerID:int):
     gio_hang=database.du_lieu_gio_hang(CustomerID)
     cart=[]
     for row in gio_hang:
@@ -134,11 +134,11 @@ def du_lieu_gio_hang(CustomerID):
     return cart
 
 @app.put("/khach_hang_them_don_hang")
-def khach_hang_them_don_hang(CustomerID):
+def khach_hang_them_don_hang(CustomerID:int):
     return database.khach_hang_them_don_hang(CustomerID)
 
 @app.put("/khach_hang_xoa_gio_hang")
-def khach_hang_xoa_gio_hang(customer_id):
+def khach_hang_xoa_gio_hang(customer_id:int):
     return database.khach_hang_xoa_gio_hang(customer_id)
 
 @app.get("/danh_sach_khach_hang")
