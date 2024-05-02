@@ -238,10 +238,11 @@ def danh_sach_san_pham():
 def danh_sach_don_hang():
     cursor.execute('''
     SELECT o.OrderID, o.TotalAmount, o.Status,
-     c.CustomerName, c.Address, c.PhoneNumber, od.ProductID, od.Quantity
+     c.CustomerName, c.Address, c.PhoneNumber, od.ProductID, od.Quantity, p.Price
     FROM Orders o
     JOIN Customers c ON o.CustomerID = c.CustomerID
     JOIN OrderDetails od ON o.OrderID = od.OrderID
+    JOIN Products p ON od.ProductID = p.ProductID
     ''')
     rows = cursor.fetchall()
     return rows
@@ -277,16 +278,17 @@ def khach_hang_them_don_hang(CustomerID):
         Quantily=san_pham[1]
         Price=san_pham[3]
         cursor.execute('''
-            INSERT INTO OrderDetails (OrderID,ProductID,Quantily,Price)
+            INSERT INTO OrderDetails (OrderID,ProductID,Quantity,Price)
             VALUES (?, ?, ?, ?)
         ''', ( OrderID,ProductID,Quantily,Price))
 
     conn.commit()
+    khach_hang_xoa_gio_hang(CustomerID)
     return OrderID
 
 def khach_hang_xoa_gio_hang(customer_id):
     cursor.execute('''
-        DELETE * FROM Cart
+        DELETE FROM Cart
         WHERE CustomerID=?
         ''',(customer_id))
     conn.commit()

@@ -55,6 +55,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 @app.get("/danh_sach_san_pham")
 def danh_sach_san_pham():
     rows = database.danh_sach_san_pham()
@@ -120,12 +121,12 @@ def danh_sach_don_hang():
                 phone_number=row[5], 
                 details=[]
             )
-        orders[order_id].details.append((row[6], row[7]))
+        orders[order_id].details.append(OrderDetail(row[6], row[7],row[8]))
     
     return list(orders.values())
 
 @app.get("/du_lieu_gio_hang")
-def du_lieu_gio_hang(CustomerID:int):
+def du_lieu_gio_hang(CustomerID):
     gio_hang=database.du_lieu_gio_hang(CustomerID)
     cart=[]
     for row in gio_hang:
@@ -134,7 +135,7 @@ def du_lieu_gio_hang(CustomerID:int):
     return cart
 
 @app.put("/khach_hang_them_don_hang")
-def khach_hang_them_don_hang(CustomerID:int):
+def khach_hang_them_don_hang(CustomerID):
     return database.khach_hang_them_don_hang(CustomerID)
 
 @app.put("/khach_hang_xoa_gio_hang")
