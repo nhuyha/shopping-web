@@ -168,7 +168,7 @@ def them_token(Customer_id:int):
 def xoa_token(token:str):
     return database.xoa_token(token)
 
-@app.get("/dang_nhap")
+@app.post("/dang_nhap")
 def dang_nhap(username:str, password: str):
     return database.dang_nhap(username, password)
 
