@@ -154,12 +154,12 @@ def them_khach_hang(ten,username,password,email,address,phone):
         WHERE username = ?
     ''',(username,))
   result=cursor.fetchone()
-  if result[0]>0:
+  if result!= None:
      return None
    
-  password=hashlib.blake2b(password).hexdigest()
+  password=hashlib.blake2b(password.encode('utf-8')).hexdigest()
   cursor.execute('''
-    INSERT INTO Customers (CustomerName,Email,Address,PhoneNumber)
+    INSERT INTO Customers (CustomerName,username,password,Email,Address,PhoneNumber)
     VALUES(?,?,?,?,?,?)
     ''',(ten,username,password,email,address,phone))
   customer_id=cursor.lastrowid
@@ -338,13 +338,13 @@ def them_token(Customer_id):
    Token = generate_random_string(32)
    cursor.execute('''
     INSERT INTO TOKEN  (CustomerID,Token)
-    VALUES(?)
+    VALUES(?,?)
     ''',(Customer_id,Token))
    conn.commit()
    return Token
 
 def dang_nhap(username,password):
-    password=hashlib.blake2b(password).hexdigest()
+    password=hashlib.blake2b(password.encode('utf-8')).hexdigest()
     cursor.execute('''
     SELECT CustomerID
         FROM Customers
@@ -354,6 +354,16 @@ def dang_nhap(username,password):
     result=cursor.fetchall()
     if result:
       Customer_id=result[0][0]
-      them_token(Customer_id)
+      return them_token(Customer_id)
     else:
       return None
+    
+def khach_hang_token(token):
+   cursor.execute('''
+    SELECT CustomerID
+        FROM TOKEN
+        WHERE token = ?
+    ''',(token,))
+   
+   result=cursor.fetchall()
+   return result[0][0]

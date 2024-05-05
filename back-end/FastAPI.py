@@ -1,10 +1,10 @@
-from typing import Union
+from typing import Annotated, Union
 from fastapi.middleware.cors import CORSMiddleware
-
-from fastapi import FastAPI
+from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel
 import database
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 class Product:
     def __init__(self, id: int, name: str, image_url: str, detail: str, price: float):
         self.id = id
@@ -36,9 +36,11 @@ class Cart:
         self.product_quantity=product_quantity
 
 class Customer:
-    def __init__ (self,CustomerID:int, CustomerName:str,Email:str,Address:str,PhoneNumber:str ):
+    def __init__ (self,CustomerID:int, CustomerName:str,username:str, password:str, Email:str,Address:str,PhoneNumber:str ):
         self.CustomerID=CustomerID
         self.CustomerName=CustomerName
+        self.username=username
+        self.password=password
         self.Email=Email
         self.Address=Address
         self.PhoneNumber=PhoneNumber
@@ -86,23 +88,28 @@ def them_khach_hang(ten:str,username:str, password:str,email:str,address:str,pho
     return database.them_khach_hang(ten,username,password,email,address,phone)
 
 @app.put("/khach_hang_chinh_sua_thong_tin")
-def khach_hang_chinh_sua_thong_tin(CustomerID:int,CustomerName:str,Email:str,Address:str,PhoneNumber:str):
+def khach_hang_chinh_sua_thong_tin(token:Annotated[str, Depends(oauth2_scheme)],CustomerName:str,Email:str,Address:str,PhoneNumber:str):
+    CustomerID=database.khach_hang_token(token)
     return database.khach_hang_chinh_sua_thong_tin(CustomerID,CustomerName,Email,Address,PhoneNumber)
 
 @app.put("/khach_hang_xoa_san_pham_khoi_gio_hang")
-def khach_hang_xoa_san_pham_khoi_gio_hang(customer_id:int, product_id:int):
+def khach_hang_xoa_san_pham_khoi_gio_hang(token:Annotated[str, Depends(oauth2_scheme)], product_id:int):
+    customer_id=database.khach_hang_token(token)
     return database.khach_hang_xoa_san_pham_khoi_gio_hang(customer_id,product_id)
 
 @app.put("/khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang")
-def khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id:int, product_id:int, new_quantity:int):
+def khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(token:Annotated[str, Depends(oauth2_scheme)], product_id:int, new_quantity:int):
+    customer_id=database.khach_hang_token(token)
     return database.khach_hang_thay_doi_so_luong_san_pham_trong_gio_hang(customer_id, product_id, new_quantity)
 
 @app.put("/khach_hang_them_1_san_pham_vao_gio_hang")
-def khach_hang_them_1_san_pham_vao_gio_hang(customer_id:int, product_id:int):
+def khach_hang_them_1_san_pham_vao_gio_hang(token:Annotated[str, Depends(oauth2_scheme)], product_id:int):
+    customer_id=database.khach_hang_token(token)
     return database.khach_hang_them_1_san_pham_vao_gio_hang(customer_id, product_id)
 
 @app.put("/khach_hang_xoa_bot_1_san_pham")
-def khach_hang_xoa_bot_1_san_pham(customer_id:int, product_id:int):
+def khach_hang_xoa_bot_1_san_pham(token:Annotated[str, Depends(oauth2_scheme)], product_id:int):
+    customer_id=database.khach_hang_token(token)
     return database.khach_hang_xoa_bot_1_san_pham(customer_id, product_id)
 
 @app.get("/danh_sach_don_hang")
@@ -126,7 +133,8 @@ def danh_sach_don_hang():
     return list(orders.values())
 
 @app.get("/du_lieu_gio_hang")
-def du_lieu_gio_hang(CustomerID:int):
+def du_lieu_gio_hang(token:Annotated[str, Depends(oauth2_scheme)]):
+    CustomerID=database.khach_hang_token(token)
     gio_hang=database.du_lieu_gio_hang(CustomerID)
     cart=[]
     for row in gio_hang:
@@ -135,11 +143,13 @@ def du_lieu_gio_hang(CustomerID:int):
     return cart
 
 @app.put("/khach_hang_them_don_hang")
-def khach_hang_them_don_hang(CustomerID:int):
+def khach_hang_them_don_hang(token:Annotated[str, Depends(oauth2_scheme)]):
+    CustomerID=database.khach_hang_token(token)
     return database.khach_hang_them_don_hang(CustomerID)
 
 @app.put("/khach_hang_xoa_gio_hang")
-def khach_hang_xoa_gio_hang(customer_id:int):
+def khach_hang_xoa_gio_hang(token:Annotated[str, Depends(oauth2_scheme)]):
+    customer_id=database.khach_hang_token(token)
     return database.khach_hang_xoa_gio_hang(customer_id)
 
 @app.get("/danh_sach_khach_hang")
@@ -147,7 +157,7 @@ def danh_sach_khach_hang():
     rows=database.danh_sach_khach_hang()
     khach_hang=[]
     for row in rows:
-        khach_hang.append(Customer(row[0],row[1],row[2],row[3],row[4]))
+        khach_hang.append(Customer(row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
     return khach_hang
 
 @app.put("/them_token")
@@ -161,3 +171,10 @@ def xoa_token(token:str):
 @app.get("/dang_nhap")
 def dang_nhap(username:str, password: str):
     return database.dang_nhap(username, password)
+
+@app.post("/token")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    username=form_data.username
+    password=form_data.password
+
+    return {"access_token": database.dang_nhap(username,password), "token_type": "bearer"}
