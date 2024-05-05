@@ -82,8 +82,8 @@ def cap_nhat_tinh_trang_don_hang(order_id:int, trang_thai_moi:str):
     return database.cap_nhat_tinh_trang_don_hang(order_id, trang_thai_moi)
 
 @app.put("/them_khach_hang")
-def them_khach_hang(ten:str,email:str,address:str,phone:str):
-    return database.them_khach_hang(ten,email,address,phone)
+def them_khach_hang(ten:str,username:str, password:str,email:str,address:str,phone:str):
+    return database.them_khach_hang(ten,username,password,email,address,phone)
 
 @app.put("/khach_hang_chinh_sua_thong_tin")
 def khach_hang_chinh_sua_thong_tin(CustomerID:int,CustomerName:str,Email:str,Address:str,PhoneNumber:str):
@@ -126,7 +126,7 @@ def danh_sach_don_hang():
     return list(orders.values())
 
 @app.get("/du_lieu_gio_hang")
-def du_lieu_gio_hang(CustomerID):
+def du_lieu_gio_hang(CustomerID:int):
     gio_hang=database.du_lieu_gio_hang(CustomerID)
     cart=[]
     for row in gio_hang:
@@ -135,7 +135,7 @@ def du_lieu_gio_hang(CustomerID):
     return cart
 
 @app.put("/khach_hang_them_don_hang")
-def khach_hang_them_don_hang(CustomerID):
+def khach_hang_them_don_hang(CustomerID:int):
     return database.khach_hang_them_don_hang(CustomerID)
 
 @app.put("/khach_hang_xoa_gio_hang")
@@ -149,3 +149,15 @@ def danh_sach_khach_hang():
     for row in rows:
         khach_hang.append(Customer(row[0],row[1],row[2],row[3],row[4]))
     return khach_hang
+
+@app.put("/them_token")
+def them_token(Customer_id:int):
+    return database.them_token(Customer_id)
+
+@app.put("/xoa_token")
+def xoa_token(token:str):
+    return database.xoa_token(token)
+
+@app.get("/dang_nhap")
+def dang_nhap(username:str, password: str):
+    return database.dang_nhap(username, password)

@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 from datetime import datetime
 # Kết nối đến cơ sở dữ liệu SQLite (nếu tệp không tồn tại, nó sẽ được tạo ra tự động)
 conn = sqlite3.connect('shopping.db',check_same_thread=False)
@@ -66,6 +67,8 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS Customers (
         CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
         CustomerName TEXT NOT NULL,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
         Email TEXT UNIQUE NOT NULL,
         Address TEXT,
         PhoneNumber TEXT
@@ -80,6 +83,14 @@ cursor.execute('''
         FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
     )
 ''')
+
+cursor.execute('''
+               CREATE TABLE IF NOT EXISTS TOKEN (
+               CustomerID INTEGER,
+               Token TEXT NOT NULL,
+               FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+               )
+               ''')
 # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
 conn.commit()
 
@@ -136,11 +147,21 @@ def cap_nhat_tinh_trang_don_hang(order_id, trang_thai_moi):
     # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
     conn.commit()
 
-def them_khach_hang(ten,email,address,phone):
+def them_khach_hang(ten,username,password,email,address,phone):
+  cursor.execute('''
+    SELECT *
+        FROM Customers
+        WHERE username = ?
+    ''',(username,))
+  result=cursor.fetchone()
+  if result[0]>0:
+     return None
+   
+  password=hashlib.blake2b(password).hexdigest()
   cursor.execute('''
     INSERT INTO Customers (CustomerName,Email,Address,PhoneNumber)
-    VALUES(?,?,?,?)
-    ''',(ten,email,address,phone))
+    VALUES(?,?,?,?,?,?)
+    ''',(ten,username,password,email,address,phone))
   customer_id=cursor.lastrowid
   conn.commit()
   return customer_id
@@ -255,7 +276,7 @@ def du_lieu_gio_hang(CustomerID):
     FROM Cart c
     JOIN Products p ON c.ProductID = p.ProductID
     WHERE c.CustomerID = ?
-    ''', (CustomerID))
+    ''', (CustomerID,))
     rows = cursor.fetchall()
     return rows
 
@@ -290,7 +311,7 @@ def khach_hang_xoa_gio_hang(customer_id):
     cursor.execute('''
         DELETE FROM Cart
         WHERE CustomerID=?
-        ''',(customer_id))
+        ''',(customer_id,))
     conn.commit()
 
 def danh_sach_khach_hang():
@@ -298,3 +319,41 @@ def danh_sach_khach_hang():
     SELECT * from Customers ''' )
     rows = cursor.fetchall()
     return rows
+
+def xoa_token(token):
+    cursor.execute('''
+        DELETE FROM TOKEN
+        WHERE token=?
+        ''',(token,))
+    conn.commit()
+
+import secrets
+import string
+
+def generate_random_string(length):
+    letters = string.ascii_letters
+    return ''.join(secrets.choice(letters) for _ in range(length))
+
+def them_token(Customer_id):
+   Token = generate_random_string(32)
+   cursor.execute('''
+    INSERT INTO TOKEN  (CustomerID,Token)
+    VALUES(?)
+    ''',(Customer_id,Token))
+   conn.commit()
+   return Token
+
+def dang_nhap(username,password):
+    password=hashlib.blake2b(password).hexdigest()
+    cursor.execute('''
+    SELECT CustomerID
+        FROM Customers
+        WHERE username = ? AND password = ?
+    ''',(username,password))
+   
+    result=cursor.fetchall()
+    if result:
+      Customer_id=result[0][0]
+      them_token(Customer_id)
+    else:
+      return None
