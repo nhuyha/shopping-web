@@ -16,12 +16,12 @@ function MainComponent() {
   };
   async function login(username: string, password: string): Promise<any> {
     try {
-        const response = await fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/dang_nhap', {
+        const response = await fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/dang_nhap?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            
         });
 
         if (!response.ok) {
