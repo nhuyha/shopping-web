@@ -7,6 +7,7 @@ type Product = {
   imageUrl: string,
   detail: string,
   price: number
+  StockQuantity: number
 };
 type Order ={
   id: number,
@@ -24,7 +25,7 @@ type Order ={
   status: string,
 };
 function MainComponent() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = React.useState<(Product)[]>([]);
   useEffect(() => {
     fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham')
         .then(response => {
@@ -41,24 +42,24 @@ function MainComponent() {
         });
 }, []);
   const [selectedProduct, setSelectedProduct] = React.useState<(Product)>();
+  
   const [selectedOrder, setSelectedOrder] = React.useState<(Order)>();
-  const [orders, setOrders] = React.useState<Order[]>([
-    {
-      id: 1,
-      buyer: "Alice Johnson",
-      deliveryAddress: "78 Wonderland Ave, Fantasia",
-      phoneNumber: "555-123-4567",
-      items: [
-        {
-          productId: 1,
-          quantity: 5,
-          price: 15,
-        },
-      ],
-      totalOrderPrice: 75,
-      status: "Shipped",
-    },
-  ]);
+  const [orders, setOrders] = React.useState<Order[]>([]);
+  useEffect(() => {
+    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_don_hang')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setOrders(data);
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+        });
+}, []);
 
   const updateOrderStatus = (id:number, newStatus:string) => {
     const updatedOrders = orders.map((order) =>
@@ -67,22 +68,23 @@ function MainComponent() {
     setOrders(updatedOrders);
   };
 
-  const updateProduct = (id:number, name:string, imageUrl:string, detail:string, price:number) => {
+  const updateProduct = (id:number, name:string, imageUrl:string, detail:string, price:number, StockQuantity:number) => {
     const updatedProducts = products.map((product) =>
       product.id === id
-        ? { ...product, name, imageUrl, detail, price }
+        ? { ...product, name, imageUrl, detail, price, StockQuantity }
         : product
     );
     setProducts(updatedProducts);
   };
 
-  const addProduct = (name:string, imageUrl:string, detail:string, price:number) => {
+  const addProduct = (name:string, imageUrl:string, detail:string, price:number, StockQuantity:number) => {
     const newProduct = {
       id: products.length + 1,
       name,
       imageUrl,
       detail,
       price,
+      StockQuantity,
     };
     setProducts([...products, newProduct]);
   };
@@ -109,7 +111,8 @@ function MainComponent() {
       formData.get("name"),
       formData.get("imageUrl"),
       formData.get("detail"),
-      formData.get("price")
+      formData.get("price"),
+      formData.get("StockQuantity")
     );
   };
 
@@ -120,7 +123,8 @@ function MainComponent() {
       form.get("name"),
       form.get("imageUrl"),
       form.get("detail"),
-      form.get("price")
+      form.get("price"),
+      form.get("StockQuantity")
     );
     event.currentTarget.reset();
   };
@@ -156,6 +160,13 @@ function MainComponent() {
               type="number"
               name="price"
               placeholder="Price"
+              className="border p-1 rounded"
+              required
+            />
+            <input
+              type="number"
+              name="StockQuantity"
+              placeholder="StockQuantity"
               className="border p-1 rounded"
               required
             />
@@ -212,6 +223,12 @@ function MainComponent() {
                 name="price"
                 className="border p-1 rounded"
                 defaultValue={selectedProduct.price}
+              />
+              <input
+                type="number"
+                name="StockQuantity"
+                className="border p-1 rounded"
+                defaultValue={selectedProduct.StockQuantity}
               />
               <button
                 type="submit"
