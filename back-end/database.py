@@ -13,7 +13,7 @@ cursor.execute('''
         Image TEXT,
         Description TEXT,
         Price DECIMAL(10, 2) NOT NULL,
-        StockQuantity INTEGER NOT NULL,
+        StockQuantity INTEGER,
         DELETED INTEGER
     )
 ''')
@@ -94,13 +94,13 @@ cursor.execute('''
 # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
 conn.commit()
 
-def them_san_pham(ten,anh, mo_ta, gia, so_luong):
+def them_san_pham(ten,anh, mo_ta, gia):
 
     # Thực thi truy vấn SQL để chèn sản phẩm mới vào bảng Sản phẩm (Products)
     cursor.execute('''
-        INSERT INTO Products (Name, Image, Description, Price, StockQuantity)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (ten,anh, mo_ta, gia, so_luong))
+        INSERT INTO Products (Name, Image, Description, Price)
+        VALUES (?, ?, ?, ?)
+    ''', (ten,anh, mo_ta, gia))
 
     # Lấy khóa chính của sản phẩm vừa được thêm vào
     product_id = cursor.lastrowid
@@ -120,17 +120,17 @@ def xoa_san_pham(product_id):
     # Lưu các thay đổi vào cơ sở dữ liệu
     conn.commit()
 
-def chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi, so_luong_moi):
+def chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi):
     # Thực thi truy vấn SQL để cập nhật thông tin của sản phẩm dựa trên ProductID
     cursor.execute('''
         UPDATE Products
         SET Name = ?,
             Image = ?,
             Description = ?,
-            Price = ?,
-            StockQuantity = ?
+            Price = ?
+            
         WHERE ProductID = ?
-    ''', (ten_moi,anh_moi, mo_ta_moi, gia_moi, so_luong_moi, product_id))
+    ''', (ten_moi,anh_moi, mo_ta_moi, gia_moi, product_id))
 
     # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
     conn.commit()
@@ -251,7 +251,7 @@ def khach_hang_xoa_bot_1_san_pham(customer_id, product_id):
 
 def danh_sach_san_pham():
     cursor.execute('''
-    SELECT ProductID,Name,Image,Description, Price from Products ''' )
+    SELECT * from Products ''' )
     rows = cursor.fetchall()
     return rows
 

@@ -1,5 +1,6 @@
 "use client";
 import React,{ useState, useEffect } from "react";
+import { Localized,useLocalization } from "@fluent/react";
 
 type Product = {
   id: number,
@@ -7,7 +8,6 @@ type Product = {
   imageUrl: string,
   detail: string,
   price: number
-  StockQuantity: number
 };
 type Order ={
   id: number,
@@ -25,6 +25,7 @@ type Order ={
   status: string,
 };
 function MainComponent() {
+  const localization = useLocalization()
   const [products, setProducts] = React.useState<(Product)[]>([]);
   useEffect(() => {
     fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham')
@@ -68,16 +69,16 @@ function MainComponent() {
     setOrders(updatedOrders);
   };
 
-  const updateProduct = (id:number, name:string, imageUrl:string, detail:string, price:number, StockQuantity:number) => {
+  const updateProduct = (id:number, name:string, imageUrl:string, detail:string, price:number) => {
     const updatedProducts = products.map((product) =>
       product.id === id
-        ? { ...product, name, imageUrl, detail, price, StockQuantity }
+        ? { ...product, name, imageUrl, detail, price }
         : product
     );
     setProducts(updatedProducts);
   };
 
-  const addProduct = (name:string, imageUrl:string, detail:string, price:number, StockQuantity:number) => {
+  const addProduct = (name:string, imageUrl:string, detail:string, price:number) => {
     const newProduct = {
       id: products.length + 1,
       name,
@@ -111,8 +112,7 @@ function MainComponent() {
       formData.get("name"),
       formData.get("imageUrl"),
       formData.get("detail"),
-      formData.get("price"),
-      formData.get("StockQuantity")
+      formData.get("price")
     );
   };
 
@@ -131,42 +131,46 @@ function MainComponent() {
 
   return (
     <div className="font-roboto">
-      <h1 className="text-2xl font-bold mb-4 text-center">Seller Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">
+        <Localized id="sellerDashboard"></Localized>
+      </h1>
       <div className="flex flex-wrap justify-center gap-10 p-4">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md">
-          <h2 className="text-xl font-bold mb-6">Product Management</h2>
+          <h2 className="text-xl font-bold mb-6">
+            <Localized id="productManagement">Product Management</Localized>
+          </h2>
           <form onSubmit={handleAddProduct}>
             <input
               type="text"
               name="name"
-              placeholder="Product name"
+              placeholder={localization.l10n.getString("product-name")}
               className="border p-1 rounded"
               required
             />
             <input
               type="text"
               name="imageUrl"
-              placeholder="Image URL"
+              placeholder={localization.l10n.getString("product-image")}
               className="border p-1 rounded"
               required
             />
             <textarea
               name="detail"
-              placeholder="Details"
+              placeholder={localization.l10n.getString("product-detail")}
               className="border p-1 rounded"
               required
             />
             <input
               type="number"
               name="price"
-              placeholder="Price"
+              placeholder={localization.l10n.getString("price")}
               className="border p-1 rounded"
               required
             />
             <input
               type="number"
               name="StockQuantity"
-              placeholder="StockQuantity"
+              placeholder={localization.l10n.getString("stockQuantity")}
               className="border p-1 rounded"
               required
             />
@@ -174,7 +178,7 @@ function MainComponent() {
               type="submit"
               className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              Add Product
+              <Localized id="submit"></Localized>
             </button>
           </form>
           {products.map((product) => (
@@ -185,17 +189,17 @@ function MainComponent() {
             >
               <img
                 src={product.imageUrl}
-                alt={`Image of ${product.name}`}
+                alt={<Localized id="productImage">Image of {product.name}</Localized>}
                 className="h-20 my-2"
               />
-              <p>Name: {product.name}</p>
-              <p>Details: {product.detail}</p>
-              <p>Price: ${product.price}</p>
+              <p><Localized id="name">Name</Localized>: {product.name}</p>
+              <p><Localized id="details">Details</Localized>: {product.detail}</p>
+              <p><Localized id="price">Price</Localized>: ${product.price}</p>
               <button
                 className="text-red-500"
                 onClick={() => deleteProduct(product.id)}
               >
-                Delete
+                <Localized id="delete">Delete</Localized>
               </button>
             </div>
           ))}
@@ -234,39 +238,41 @@ function MainComponent() {
                 type="submit"
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               >
-                Update
+                <Localized id="update"></Localized>
               </button>
             </form>
           )}
         </div>
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md">
-          <h2 className="text-xl font-bold mb-6">Order Management</h2>
+          <h2 className="text-xl font-bold mb-6">
+            <Localized id="order-management"></Localized>
+          </h2>
           {orders.map((order) => (
             <div
               key={order.id}
               className="p-4 mb-2 border-b cursor-pointer"
               onClick={() => handleOrderSelection(order)}
             >
-              <p>Order ID: {order.id}</p>
-              <p>Total Price: ${order.totalOrderPrice}</p>
-              <p>Status: {order.status}</p>
+              <p><Localized id="order-id">Order ID</Localized>: {order.id}</p>
+              <p><Localized id="total-order-price"></Localized>: ${order.totalOrderPrice}</p>
+              <p><Localized id="status"></Localized>: {order.status}</p>
             </div>
           ))}
           {selectedOrder && (
             <div>
-              <h3 className="text-lg font-bold mb-4">Order Details</h3>
+              <h3 className="text-lg font-bold mb-4"><Localized id="orderDetails">Order Details</Localized></h3>
               <p>
-                Name:{" "}
+                <Localized id="name"></Localized>:{" "}
                 <span className="font-semibold">{selectedOrder.buyer}</span>
               </p>
               <p>
-                Address:{" "}
+                <Localized id="address"></Localized>:{" "}
                 <span className="font-semibold">
                   {selectedOrder.deliveryAddress}
                 </span>
               </p>
               <p>
-                Phone:{" "}
+                <Localized id="phone"></Localized>:{" "}
                 <span className="font-semibold">
                   {selectedOrder.phoneNumber}
                 </span>
@@ -274,23 +280,23 @@ function MainComponent() {
               {selectedOrder.items.map((item, index) => (
                 <div key={index}>
                   <p>
-                    Product Name:{" "}
+                    <Localized id="product-name"></Localized>:{" "}
                     <span className="font-semibold">
                       {products.find((p) => p.id === item.productId)!.name}
                     </span>
                   </p>
                   <p>
-                    Quantity:{" "}
+                    <Localized id="quantity"></Localized>:{" "}
                     <span className="font-semibold">{item.quantity}</span>
                   </p>
                   <p>
-                    Price per item:{" "}
+                    <Localized id="price-per-item"></Localized>:{" "}
                     <span className="font-semibold">${item.price}</span>
                   </p>
                 </div>
               ))}
               <p>
-                Total Order Price:{" "}
+                <Localized id="total-order-price">e</Localized>:{" "}
                 <span className="font-semibold">
                   ${selectedOrder.totalOrderPrice}
                 </span>
@@ -299,13 +305,13 @@ function MainComponent() {
                 onClick={() => updateOrderStatus(selectedOrder.id, "Delivered")}
                 className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               >
-                Mark as Delivered
+                <Localized id="Delivered"></Localized>
               </button>
               <button
                 onClick={() => updateOrderStatus(selectedOrder.id, "Shipped")}
                 className="mt-4 ml-4 bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
               >
-                Mark as Shipped
+                <Localized id="Delivering"></Localized>
               </button>
             </div>
           )}

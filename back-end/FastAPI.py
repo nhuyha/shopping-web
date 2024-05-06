@@ -12,6 +12,7 @@ class Product:
         self.image_url = image_url
         self.detail = detail
         self.price = price
+
 class OrderDetail:
     def __init__(self,product_id:int,quantity:int,price:int):
         self.product_id=product_id
@@ -76,8 +77,8 @@ def xoa_san_pham(product_id:int):
     return database.xoa_san_pham(product_id)
 
 @app.put("/chinh_sua_san_pham")
-def chinh_sua_san_pham(product_id:int, ten_moi:str,anh_moi:str, mo_ta_moi:str, gia_moi:int , so_luong_moi:int):
-    return database.chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi, so_luong_moi)
+def chinh_sua_san_pham(product_id:int, ten_moi:str,anh_moi:str, mo_ta_moi:str, gia_moi:int ):
+    return database.chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi)
 @app.put("/cap_nhat_tinh_trang_don_hang")
 
 def cap_nhat_tinh_trang_don_hang(order_id:int, trang_thai_moi:str):

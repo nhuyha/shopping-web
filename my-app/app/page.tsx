@@ -91,7 +91,7 @@ function MainComponent() {
             className="w-full p-2 rounded text-black bg-white"
             type="search"
             name="searchProduct"
-            placeholder={localization.l10n.getString("searchProducts")}
+            placeholder={localization.l10n.getString("search-products")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
