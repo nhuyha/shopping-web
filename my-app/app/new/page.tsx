@@ -85,7 +85,7 @@ function MainComponent() {
       imageUrl,
       detail,
       price,
-      StockQuantity,
+
     };
     setProducts([...products, newProduct]);
   };
@@ -123,8 +123,7 @@ function MainComponent() {
       form.get("name"),
       form.get("imageUrl"),
       form.get("detail"),
-      form.get("price"),
-      form.get("StockQuantity")
+      form.get("price")
     );
     event.currentTarget.reset();
   };
@@ -227,12 +226,6 @@ function MainComponent() {
                 name="price"
                 className="border p-1 rounded"
                 defaultValue={selectedProduct.price}
-              />
-              <input
-                type="number"
-                name="StockQuantity"
-                className="border p-1 rounded"
-                defaultValue={selectedProduct.StockQuantity}
               />
               <button
                 type="submit"

@@ -69,8 +69,8 @@ def danh_sach_san_pham():
     return danh_sach
 
 @app.put("/them_san_pham")
-def them_san_pham(ten:str,anh:str, mo_ta:str, gia:int, so_luong:int):
-    return database.them_san_pham(ten,anh, mo_ta, gia, so_luong)
+def them_san_pham(ten:str,anh:str, mo_ta:str, gia:int):
+    return database.them_san_pham(ten,anh, mo_ta, gia)
 
 @app.put("/xoa_san_pham")
 def xoa_san_pham(product_id:int):
