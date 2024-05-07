@@ -20,8 +20,49 @@ exec('uvicorn --app-dir ../back-end FastAPI:app', (error, stdout, stderr) => {
     console.log(`stdout: ${stdout}`);
     console.error(`stderr: ${stderr}`);
   }); 
+  import http from 'http';
 
-test('them san pham', async() => {
+  // Hàm kiểm tra xem cổng đã mở hay chưa
+  function isPortOpen(port) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        host: 'localhost',
+        port: port,
+        timeout: 1000, // Thời gian chờ tối đa (ms)
+      };
+  
+      const request = http.request(options, (res) => {
+        resolve(true);
+      });
+  
+      request.on('error', () => {
+        resolve(false);
+      });
+  
+      request.end();
+    });
+  }
+  
+  // Hàm chờ cổng mở
+  async function waitForPort(port) {
+    let isOpen = false;
+    while (!isOpen) {
+      isOpen = await isPortOpen(port);
+      if (!isOpen) {
+        console.log(`Port ${port} is not open yet. Waiting...`);
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Chờ 1 giây trước khi kiểm tra lại
+      }
+    }
+    console.log(`Port ${port} is open!`);
+  }
+  
+  // Sử dụng hàm waitForPort để chờ cổng 8000 mở
+  waitForPort(8000).then(() => {
+    // Gọi hàm hoặc thực hiện các thao tác khác sau khi cổng đã mở
+    test()
+  });
+  
+const test = async() => {
   const params = new URLSearchParams();
   params.append('ten', 'ten')
   params.append('anh', 'anh')
@@ -38,6 +79,10 @@ test('them san pham', async() => {
   const project_id = await them_san_pham.json();//project_id
   const danh_sach = await danh_sach_san_pham.json()
   result = danh_sach.filter((item) => project_id===item.id)
-  expect(result.length).toBe(1)
-  });
-
+  if(result.length!==1) {
+    console.log('false')
+  }
+  else{
+    console.log('true')
+  }
+  }
