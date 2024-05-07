@@ -5,23 +5,22 @@ import { Localized,useLocalization } from "@fluent/react";
 type Product = {
   id: number,
   name: string,
-  imageUrl: string,
+  image_url: string,
   detail: string,
   price: number
 };
+type OrderDetail={
+  product_id: number,
+  quantity: number,
+  price: number,
+}
 type Order ={
-  id: number,
-  buyer: string,
-  deliveryAddress: string,
-  phoneNumber: string,
-  items: [
-        {
-          productId: number,
-          quantity: number,
-          price: number,
-        },
-      ],
-  totalOrderPrice: number,
+  order_id: number,
+  customer_name: string,
+  address: string,
+  phone_number: string,
+  details : OrderDetail[],
+  total_amount: number,
   status: string,
 };
 function MainComponent() {
@@ -64,7 +63,7 @@ function MainComponent() {
 
   const updateOrderStatus = (id:number, newStatus:string) => {
     const updatedOrders = orders.map((order) =>
-      order.id === id ? { ...order, status: newStatus } : order
+      order.order_id === id ? { ...order, status: newStatus } : order
     );
     setOrders(updatedOrders);
   };
@@ -79,16 +78,27 @@ function MainComponent() {
   };
 
   const addProduct = (name:string, imageUrl:string, detail:string, price:number) => {
-    const newProduct = {
-      id: products.length + 1,
-      name,
-      imageUrl,
-      detail,
-      price,
-
-    };
-    setProducts([...products, newProduct]);
-  };
+    const param= { 'ten': name,
+                 'anh':imageUrl,
+                  'mo_ta': detail,
+                   'gia':price }
+    try {
+      const response = fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/them_san_pham', {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(param),
+      });
+      if (!response.ok) {
+          throw new Error('Failed to add product');
+      }
+  }catch (error) {
+    alert('Failed to add product');
+    console.error('Error during add product:', error);
+    throw error;
+}
+};  
 
   const deleteProduct = (id:number) => {
     const filteredProducts = products.filter((product) => product.id !== id);
@@ -109,10 +119,10 @@ function MainComponent() {
     const formData = new FormData(form);
     updateProduct(
       selectedProduct!.id,
-      formData.get("name"),
-      formData.get("imageUrl"),
-      formData.get("detail"),
-      formData.get("price")
+      form.get("name") as string,
+      form.get("imageUrl") as string ,
+      form.get("detail") as string,
+      parseInt(form.get("price") as string),
     );
   };
 
@@ -120,10 +130,10 @@ function MainComponent() {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     addProduct(
-      form.get("name"),
-      form.get("imageUrl"),
-      form.get("detail"),
-      form.get("price")
+      form.get("name") as string,
+      form.get("imageUrl") as string ,
+      form.get("detail") as string,
+      parseInt(form.get("price") as string),
     );
     event.currentTarget.reset();
   };
@@ -136,7 +146,7 @@ function MainComponent() {
       <div className="flex flex-wrap justify-center gap-10 p-4">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md">
           <h2 className="text-xl font-bold mb-6">
-            <Localized id="productManagement">Product Management</Localized>
+            <Localized id="productManagement"></Localized>
           </h2>
           <form onSubmit={handleAddProduct}>
             <input
@@ -166,13 +176,6 @@ function MainComponent() {
               className="border p-1 rounded"
               required
             />
-            <input
-              type="number"
-              name="StockQuantity"
-              placeholder={localization.l10n.getString("stockQuantity")}
-              className="border p-1 rounded"
-              required
-            />
             <button
               type="submit"
               className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -187,18 +190,18 @@ function MainComponent() {
               onClick={() => handleProductSelection(product)}
             >
               <img
-                src={product.imageUrl}
+                src={product.image_url}
                 alt={<Localized id="productImage">Image of {product.name}</Localized>}
                 className="h-20 my-2"
               />
-              <p><Localized id="name">Name</Localized>: {product.name}</p>
-              <p><Localized id="details">Details</Localized>: {product.detail}</p>
+              <p><Localized id="name"></Localized>: {product.name}</p>
+              <p><Localized id="product-detail"></Localized>: {product.detail}</p>
               <p><Localized id="price">Price</Localized>: ${product.price}</p>
               <button
                 className="text-red-500"
                 onClick={() => deleteProduct(product.id)}
               >
-                <Localized id="delete">Delete</Localized>
+                <Localized id="delete"></Localized>
               </button>
             </div>
           ))}
@@ -242,66 +245,66 @@ function MainComponent() {
           </h2>
           {orders.map((order) => (
             <div
-              key={order.id}
+              key={order.order_id}
               className="p-4 mb-2 border-b cursor-pointer"
               onClick={() => handleOrderSelection(order)}
             >
-              <p><Localized id="order-id">Order ID</Localized>: {order.id}</p>
-              <p><Localized id="total-order-price"></Localized>: ${order.totalOrderPrice}</p>
+              <p><Localized id="order-id"></Localized>: {order.order_id}</p>
+              <p><Localized id="total-order-price"></Localized>: $ {order.total_amount}</p>
               <p><Localized id="status"></Localized>: {order.status}</p>
             </div>
           ))}
           {selectedOrder && (
             <div>
-              <h3 className="text-lg font-bold mb-4"><Localized id="orderDetails">Order Details</Localized></h3>
+              <h3 className="text-lg font-bold mb-4"><Localized id="orderDetails"></Localized></h3>
               <p>
                 <Localized id="name"></Localized>:{" "}
-                <span className="font-semibold">{selectedOrder.buyer}</span>
+                <span className="font-semibold">{selectedOrder.customer_name}</span>
               </p>
               <p>
                 <Localized id="address"></Localized>:{" "}
                 <span className="font-semibold">
-                  {selectedOrder.deliveryAddress}
+                  {selectedOrder.address}
                 </span>
               </p>
               <p>
                 <Localized id="phone"></Localized>:{" "}
                 <span className="font-semibold">
-                  {selectedOrder.phoneNumber}
+                  {selectedOrder.phone_number}
                 </span>
               </p>
-              {selectedOrder.items.map((item, index) => (
-                <div key={index}>
+              {selectedOrder.details.map((OrderDetail) => (
+                <div key={OrderDetail.product_id}>
                   <p>
                     <Localized id="product-name"></Localized>:{" "}
                     <span className="font-semibold">
-                      {products.find((p) => p.id === item.productId)!.name}
+                      {products.find((p) => p.id === OrderDetail.product_id)!.name}
                     </span>
                   </p>
                   <p>
                     <Localized id="quantity"></Localized>:{" "}
-                    <span className="font-semibold">{item.quantity}</span>
+                    <span className="font-semibold">{OrderDetail.quantity}</span>
                   </p>
                   <p>
                     <Localized id="price-per-item"></Localized>:{" "}
-                    <span className="font-semibold">${item.price}</span>
+                    <span className="font-semibold">${OrderDetail.price}</span>
                   </p>
                 </div>
               ))}
               <p>
                 <Localized id="total-order-price">e</Localized>:{" "}
                 <span className="font-semibold">
-                  ${selectedOrder.totalOrderPrice}
+                  ${selectedOrder.total_amount}
                 </span>
               </p>
               <button
-                onClick={() => updateOrderStatus(selectedOrder.id, "Delivered")}
+                onClick={() => updateOrderStatus(selectedOrder.order_id, "Delivered")}
                 className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               >
                 <Localized id="Delivered"></Localized>
               </button>
               <button
-                onClick={() => updateOrderStatus(selectedOrder.id, "Shipped")}
+                onClick={() => updateOrderStatus(selectedOrder.order_id, "Shipped")}
                 className="mt-4 ml-4 bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
               >
                 <Localized id="Delivering"></Localized>

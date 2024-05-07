@@ -32,4 +32,5 @@ submit = xác nhận
 update = Cập nhật
 Delivered = Đã giao hàng
 Delivering = Đang giao hàng
+delete=Xóa
 `

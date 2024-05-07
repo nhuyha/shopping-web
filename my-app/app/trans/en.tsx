@@ -32,4 +32,5 @@ submit = Submit
 update = Update
 Delivered = Delivered
 Delivering = Delivering
+delete= Delete
 `
