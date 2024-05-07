@@ -77,22 +77,30 @@ function MainComponent() {
     setProducts(updatedProducts);
   };
 
-  const addProduct = (name:string, imageUrl:string, detail:string, price:number) => {
-    const param= { 'ten': name,
-                 'anh':imageUrl,
-                  'mo_ta': detail,
-                   'gia':price }
+  const addProduct = async(name:string, imageUrl:string, detail:string, price:number) => {
+    const params = new URLSearchParams();
+    params.append('ten', name)
+    params.append('anh', imageUrl)
+    params.append('mo_ta', detail)
+    params.append('gia',String(price))
+  
     try {
-      const response = fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/them_san_pham', {
+      const response = await fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/them_san_pham?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify(param),
       });
       if (!response.ok) {
           throw new Error('Failed to add product');
       }
+      const id= await response.json()
+      setProducts((prevProducts) => [...prevProducts,{id: id,
+        name: name,
+        image_url: imageUrl,
+        detail: detail,
+        price: price
+      }]);
   }catch (error) {
     alert('Failed to add product');
     console.error('Error during add product:', error);
@@ -100,9 +108,26 @@ function MainComponent() {
 }
 };  
 
-  const deleteProduct = (id:number) => {
-    const filteredProducts = products.filter((product) => product.id !== id);
-    setProducts(filteredProducts);
+  const deleteProduct = async (id:number) => {
+    const params = new URLSearchParams();
+    params.append('product_id', String(id))
+    try {
+      const response = await fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/xoa_san_pham?'+params, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Failed to add product');
+      }
+      const filteredProducts = products.filter((product) => product.id !== id);
+      setProducts(filteredProducts);}
+      catch (error) {
+    alert('Failed to add product');
+    console.error('Error during add product:', error);
+    throw error;}
+    
   };
 
   const handleProductSelection = (product:Product) => {

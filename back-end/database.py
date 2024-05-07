@@ -251,7 +251,8 @@ def khach_hang_xoa_bot_1_san_pham(customer_id, product_id):
 
 def danh_sach_san_pham():
     cursor.execute('''
-    SELECT * from Products ''' )
+    SELECT * from Products
+    WHERE DELETED !=1 ''' )
     rows = cursor.fetchall()
     return rows
 
