@@ -61,20 +61,60 @@ function MainComponent() {
         });
 }, []);
 
-  const updateOrderStatus = (id:number, newStatus:string) => {
-    const updatedOrders = orders.map((order) =>
-      order.order_id === id ? { ...order, status: newStatus } : order
-    );
-    setOrders(updatedOrders);
+  const updateOrderStatus = async(id:number, newStatus:string) => {
+    const params = new URLSearchParams();
+    params.append('order_id', String(id))
+    params.append('trang_thai_moi', newStatus)
+    try {
+      const response = await fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/cap_nhat_tinh_trang_don_hang?'+params, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Failed to add product');
+      }
+      const updatedOrders = orders.map((order) =>
+        order.order_id === id ? { ...order, status: newStatus } : order);
+      setOrders(updatedOrders);
+    }
+      catch (error) {
+    alert('Failed to add product');
+    console.error('Error during add product:', error);
+    throw error;}
+    
   };
 
-  const updateProduct = (id:number, name:string, imageUrl:string, detail:string, price:number) => {
-    const updatedProducts = products.map((product) =>
-      product.id === id
-        ? { ...product, name, imageUrl, detail, price }
-        : product
-    );
-    setProducts(updatedProducts);
+  const updateProduct = async (id:number, name:string, imageUrl:string, detail:string, price:number) => {
+    const params = new URLSearchParams();
+    params.append('product_id', String(id))
+    params.append('ten_moi', name)
+    params.append('anh_moi', imageUrl)
+    params.append('mo_ta_moi', detail)
+    params.append('gia_moi',String(price))
+  
+    try {
+      const response = await fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/chinh_sua_san_pham?'+params, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Failed to add product');
+      }
+      const updatedProducts = products.map((product) =>
+        product.id === id
+          ? { ...product, name, imageUrl, detail, price }
+          : product
+      );
+      setProducts(updatedProducts);
+  }catch (error) {
+    alert('Failed to add product');
+    console.error('Error during add product:', error);
+    throw error;
+}
   };
 
   const addProduct = async(name:string, imageUrl:string, detail:string, price:number) => {
@@ -144,11 +184,12 @@ function MainComponent() {
     const formData = new FormData(form);
     updateProduct(
       selectedProduct!.id,
-      form.get("name") as string,
-      form.get("imageUrl") as string ,
-      form.get("detail") as string,
-      parseInt(form.get("price") as string),
+      formData.get("name") as string,
+      formData.get("imageUrl") as string ,
+      formData.get("detail") as string,
+      parseInt(formData.get("price") as string),
     );
+    event.currentTarget.reset();
   };
 
   const handleAddProduct = (event: React.SyntheticEvent<HTMLFormElement>) => {

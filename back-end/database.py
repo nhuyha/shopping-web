@@ -98,9 +98,9 @@ def them_san_pham(ten,anh, mo_ta, gia):
 
     # Thực thi truy vấn SQL để chèn sản phẩm mới vào bảng Sản phẩm (Products)
     cursor.execute('''
-        INSERT INTO Products (Name, Image, Description, Price)
-        VALUES (?, ?, ?, ?)
-    ''', (ten,anh, mo_ta, gia))
+        INSERT INTO Products (Name, Image, Description, Price,DELETED)
+        VALUES (?, ?, ?, ?,?)
+    ''', (ten,anh, mo_ta, gia,0))
 
     # Lấy khóa chính của sản phẩm vừa được thêm vào
     product_id = cursor.lastrowid
@@ -113,12 +113,13 @@ def xoa_san_pham(product_id):
     # Thực thi truy vấn SQL để cập nhật cờ Deleted của sản phẩm dựa trên ProductID
     cursor.execute('''
         UPDATE Products
-        SET Deleted = 1
+        SET DELETED = 1
         WHERE ProductID = ?
     ''', (product_id,))
 
     # Lưu các thay đổi vào cơ sở dữ liệu
     conn.commit()
+    return product_id
 
 def chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi):
     # Thực thi truy vấn SQL để cập nhật thông tin của sản phẩm dựa trên ProductID

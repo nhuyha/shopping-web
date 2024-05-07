@@ -79,8 +79,8 @@ def xoa_san_pham(product_id:int):
 @app.put("/chinh_sua_san_pham")
 def chinh_sua_san_pham(product_id:int, ten_moi:str,anh_moi:str, mo_ta_moi:str, gia_moi:int ):
     return database.chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi)
-@app.put("/cap_nhat_tinh_trang_don_hang")
 
+@app.put("/cap_nhat_tinh_trang_don_hang")
 def cap_nhat_tinh_trang_don_hang(order_id:int, trang_thai_moi:str):
     return database.cap_nhat_tinh_trang_don_hang(order_id, trang_thai_moi)
 

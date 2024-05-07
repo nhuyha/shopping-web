@@ -14,7 +14,7 @@ import fetch, {
  import http from 'http';
 
   // Hàm kiểm tra xem cổng đã mở hay chưa
-  function isPortOpen(port) {
+function isPortOpen(port) {
     return new Promise((resolve, reject) => {
       const options = {
         host: 'localhost',
@@ -32,10 +32,10 @@ import fetch, {
   
       request.end();
     });
-  }
+  };
   
   // Hàm chờ cổng mở
-  async function waitForPort(port) {
+async function waitForPort(port) {
     let isOpen = false;
     while (!isOpen) {
       isOpen = await isPortOpen(port);
@@ -45,27 +45,28 @@ import fetch, {
       }
     }
     console.log(`Port ${port} is open!`);
-  }
+  };
   
   // Sử dụng hàm waitForPort để chờ cổng 8000 mở
   waitForPort(8000).then(() => {
     // Gọi hàm hoặc thực hiện các thao tác khác sau khi cổng đã mở
-    test()
+    
+    test3()
   });
   
-const test = async() => {
+const test1 = async() => {
   const params = new URLSearchParams();
   params.append('ten', 'ten')
   params.append('anh', 'anh')
   params.append('mo_ta', 'mota')
   params.append('gia',11)
-
-  const them_san_pham = await fetch("http://localhost:8000/them_san_pham?" + params,{
-    method: 'PUT',
-  });
   const danh_sach_san_pham = await fetch("http://localhost:8000/danh_sach_san_pham",{
     method: 'GET',
   });
+  const them_san_pham = await fetch("http://localhost:8000/them_san_pham?" + params,{
+    method: 'PUT',
+  });
+  
   const project_id = await them_san_pham.json();//project_id
   const danh_sach = await danh_sach_san_pham.json()
   const result = danh_sach.filter((item) => project_id===item.id)
@@ -75,4 +76,48 @@ const test = async() => {
   else{
     console.log('true')
   }
-  }
+  };
+
+  const test2 = async() => {
+    const params = new URLSearchParams();
+    params.append('product_id',String(1))
+    
+    const xoa_san_pham = await fetch("http://localhost:8000/xoa_san_pham?" + params,{
+      method: 'PUT',
+    });
+    const danh_sach_san_pham = await fetch("http://localhost:8000/danh_sach_san_pham",{
+    method: 'GET',
+  });
+    const danh_sach = await danh_sach_san_pham.json()
+    const result = danh_sach.find(item=> item.id===1)
+    if(!result) {
+      console.log('true')
+    }
+    else{
+      console.log('false')
+    }
+    }
+
+    const test3 = async() => {
+      const params = new URLSearchParams();
+      params.append('product_id', String(1))
+      params.append('ten_moi', "ten_moi")
+      params.append('anh_moi', 'anh')
+      params.append('mo_ta_moi', 'mota')
+      params.append('gia_moi',11)
+      const danh_sach_san_pham = await fetch("http://localhost:8000/danh_sach_san_pham",{
+        method: 'GET',
+      });
+      const chinh_sua_san_pham = await fetch("http://localhost:8000/chinh_sua_san_pham?" + params,{
+        method: 'PUT',
+      });
+      
+      const danh_sach = await danh_sach_san_pham.json()
+      const result = danh_sach.filter((item) => 1===item.id&&'ten_moi'===item.name&&item.image_url==='anh'&&item.detail==='mota'&&item.price===11)
+      if(result.length===1) {
+        console.log('true')
+      }
+      else{
+        console.log('false')
+      }
+      };
