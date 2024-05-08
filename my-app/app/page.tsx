@@ -1,36 +1,49 @@
 "use client"
-import React from "react";
+import React,{ useState, useEffect } from "react";
 import { Localized, useLocalization } from "@fluent/react"
 type Product = { 
   id: number,
   name: string, 
-  price: number,
   image: string,
+  detail: string,
+  price: number,
+  
 };
 
 function MainComponent() {
   const localization = useLocalization()
-  const [products, setProducts] = React.useState([
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 99.99,
-      image: "/images/headphones.jpg",
-    },
-    {
-      id: 2,
-      name: "Smartwatch",
-      price: 199.99,
-      image: "/images/smartwatch.jpg",
-    },
-    {
-      id: 3,
-      name: "Portable Speaker",
-      price: 149.99,
-      image: "/images/speaker.jpg",
-    },
-  ]);
+  const [products, setProducts] = React.useState<(Product)[]>([]);
+  useEffect(() => {
+    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setProducts(data);
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+        });
+}, []);
   const [cart, setCart] = React.useState<(Product & { quantity: number })[]>([]);
+  useEffect(() => {
+    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/du_lieu_gio_hang?token='+encodeURIComponent(token!))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+          setCart(data);
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+        });
+}, []);
   const [search, setSearch] = React.useState("");
   const [showCart, setShowCart] = React.useState(false);
 

@@ -283,7 +283,7 @@ function MainComponent() {
                 type="text"
                 name="imageUrl"
                 className="border p-1 rounded"
-                defaultValue={selectedProduct.imageUrl}
+                defaultValue={selectedProduct.image_url}
               />
               <textarea
                 name="detail"
