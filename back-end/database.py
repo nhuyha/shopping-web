@@ -274,7 +274,7 @@ def danh_sach_don_hang():
 
 def du_lieu_gio_hang(CustomerID):
     cursor.execute('''
-    SELECT c.ProductID, c.Quantity, p.Name,p.Price, p.Image
+    SELECT c.ProductID, c.Quantity, p.Name,p.Price, p.Image, p.Description
     FROM Cart c
     JOIN Products p ON c.ProductID = p.ProductID
     WHERE c.CustomerID = ?

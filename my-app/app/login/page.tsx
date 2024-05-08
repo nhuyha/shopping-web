@@ -1,9 +1,12 @@
 "use client";
 import React from "react";
 import { useRouter } from 'next/navigation';
+import libsodium from 'libsodium-wrappers';
+import { Buffer } from "buffer";
 
 function MainComponent() {
   const Router=useRouter();
+
   const handleSubmit = (event:React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -15,6 +18,8 @@ function MainComponent() {
     );
   };
   async function login(username: string, password: string): Promise<any> {
+    await libsodium.ready;
+    password=Buffer.from(libsodium.crypto_pwhash(32,password,new Uint8Array([1,32,16,17,98,77,55]),libsodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,libsodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,libsodium.crypto_pwhash_ALG_ARGON2I13)).toString('base64')
     try {
         const response = await fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/dang_nhap?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), {
             method: 'POST',

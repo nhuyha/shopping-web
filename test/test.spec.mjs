@@ -48,10 +48,12 @@ async function waitForPort(port) {
   };
   
   // Sử dụng hàm waitForPort để chờ cổng 8000 mở
-  waitForPort(8000).then(() => {
+  waitForPort(8000).then(async() => {
     // Gọi hàm hoặc thực hiện các thao tác khác sau khi cổng đã mở
-    
-    test3()
+    await test1()
+    await test2()
+    await test1()
+    await test3()
   });
   
 const test1 = async() => {
@@ -60,12 +62,13 @@ const test1 = async() => {
   params.append('anh', 'anh')
   params.append('mo_ta', 'mota')
   params.append('gia',11)
-  const danh_sach_san_pham = await fetch("http://localhost:8000/danh_sach_san_pham",{
-    method: 'GET',
-  });
   const them_san_pham = await fetch("http://localhost:8000/them_san_pham?" + params,{
     method: 'PUT',
   });
+  const danh_sach_san_pham = await fetch("http://localhost:8000/danh_sach_san_pham",{
+    method: 'GET',
+  });
+  
   
   const project_id = await them_san_pham.json();//project_id
   const danh_sach = await danh_sach_san_pham.json()
@@ -100,20 +103,21 @@ const test1 = async() => {
 
     const test3 = async() => {
       const params = new URLSearchParams();
-      params.append('product_id', String(1))
+      params.append('product_id', String(2))
       params.append('ten_moi', "ten_moi")
       params.append('anh_moi', 'anh')
       params.append('mo_ta_moi', 'mota')
       params.append('gia_moi',11)
-      const danh_sach_san_pham = await fetch("http://localhost:8000/danh_sach_san_pham",{
-        method: 'GET',
-      });
       const chinh_sua_san_pham = await fetch("http://localhost:8000/chinh_sua_san_pham?" + params,{
         method: 'PUT',
       });
+      const danh_sach_san_pham = await fetch("http://localhost:8000/danh_sach_san_pham",{
+        method: 'GET',
+      });
+      
       
       const danh_sach = await danh_sach_san_pham.json()
-      const result = danh_sach.filter((item) => 1===item.id&&'ten_moi'===item.name&&item.image_url==='anh'&&item.detail==='mota'&&item.price===11)
+      const result = danh_sach.filter((item) => 2===item.id&&'ten_moi'===item.name&&item.image_url==='anh'&&item.detail==='mota'&&item.price===11)
       if(result.length===1) {
         console.log('true')
       }
@@ -121,3 +125,5 @@ const test1 = async() => {
         console.log('false')
       }
       };
+
+    

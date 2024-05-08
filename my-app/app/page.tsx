@@ -12,6 +12,7 @@ type Product = {
 
 function MainComponent() {
   const localization = useLocalization()
+  const token = localStorage.getItem('token')
   const [products, setProducts] = React.useState<(Product)[]>([]);
   useEffect(() => {
     fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham')
@@ -30,7 +31,12 @@ function MainComponent() {
 }, []);
   const [cart, setCart] = React.useState<(Product & { quantity: number })[]>([]);
   useEffect(() => {
-    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/du_lieu_gio_hang?token='+encodeURIComponent(token!))
+    const token = localStorage.getItem('token')
+    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/du_lieu_gio_hang',{
+    headers: {
+      'accept': 'application/json',
+      'Authorization': 'Bearer '+token
+    }})
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');

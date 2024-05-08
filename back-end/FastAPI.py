@@ -29,12 +29,14 @@ class Order:
         self.status = status
 
 class Cart:
-    def __init__ (self, product_id:int, product_name:str, product_price:int, product_image:str, product_quantity:int):
-        self.product_id=product_id
-        self.product_name=product_name
+    def __init__ (self, product_id:int, product_name:str, product_price:int, product_image:str, product_quantity:int, product_detail:str):
+        self.id=product_id
+        self.name=product_name
+        self.image=product_image
+        self.detail=product_detail
         self.price=product_price
-        self.product_image=product_image
-        self.product_quantity=product_quantity
+        self.quantity=product_quantity
+        
 
 class Customer:
     def __init__ (self,CustomerID:int, CustomerName:str,username:str, password:str, Email:str,Address:str,PhoneNumber:str ):
@@ -139,7 +141,7 @@ def du_lieu_gio_hang(token:Annotated[str, Depends(oauth2_scheme)]):
     gio_hang=database.du_lieu_gio_hang(CustomerID)
     cart=[]
     for row in gio_hang:
-        cart.append(Cart(row[0],row[2],row[3],row[4],row[1]))
+        cart.append(Cart(row[0],row[2],row[3],row[4],row[1],row[5]))
 
     return cart
 
