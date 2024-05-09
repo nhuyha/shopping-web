@@ -1,55 +1,58 @@
 "use client"
-import React,{ useState, useEffect } from "react";
-import { Localized, useLocalization } from "@fluent/react"
-type Product = { 
-  id: number,
-  name: string, 
-  image: string,
-  detail: string,
-  price: number,
-  
+import React, { useState, useEffect } from "react";
+import { Localized, useLocalization } from "@fluent/react";
+
+type Product = {
+  id: number;
+  name: string;
+  image: string;
+  detail: string;
+  price: number;
 };
 
 function MainComponent() {
-  const localization = useLocalization()
-  const token = localStorage.getItem('token')
-  const [products, setProducts] = React.useState<(Product)[]>([]);
+  const localization = useLocalization();
+
+  const [products, setProducts] = React.useState<Product[]>([]);
   useEffect(() => {
-    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setProducts(data);
-        })
-        .catch(error => {
-            console.error('Fetch Error:', error);
-        });
-}, []);
+    fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((error) => {
+        console.error("Fetch Error:", error);
+      });
+  }, []);
+
   const [cart, setCart] = React.useState<(Product & { quantity: number })[]>([]);
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    fetch('https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/du_lieu_gio_hang',{
-    headers: {
-      'accept': 'application/json',
-      'Authorization': 'Bearer '+token
-    }})
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-          setCart(data);
-        })
-        .catch(error => {
-            console.error('Fetch Error:', error);
-        });
-}, []);
+    const token = localStorage.getItem("token");
+    fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/du_lieu_gio_hang", {
+      headers: {
+        accept: "application/json",
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCart(data);
+      })
+      .catch((error) => {
+        console.error("Fetch Error:", error);
+      });
+  }, []);
+
   const [search, setSearch] = React.useState("");
   const [showCart, setShowCart] = React.useState(false);
 
@@ -57,18 +60,39 @@ function MainComponent() {
     product.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const addToCart = (product: Product) => {
-    const productExists = cart.find((item) => item.id === product.id);
-    if (productExists) {
-      setCart(
-        cart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
+  const addToCart = async (product: Product) => {
+    const token = localStorage.getItem("token");
+    const params = new URLSearchParams();
+    params.append("product_id", String(product.id));
+
+    try {
+      const response = await fetch(
+        "https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev//khach_hang_them_1_san_pham_vao_gio_hang?" + params,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
       );
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+      if (!response.ok) {
+        throw new Error("Failed to add product");
+      }
+      const productExists = cart.find((item) => item.id === product.id);
+      if (productExists) {
+        setCart(
+          cart.map((item) =>
+            item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          )
+        );
+      } else {
+        setCart([...cart, { ...product, quantity: 1 }]);
+      }
+    } catch (error) {
+      alert("Failed to add product");
+      console.error("Error during add product:", error);
+      throw error;
     }
   };
 
@@ -96,8 +120,34 @@ function MainComponent() {
     setShowCart(false);
   };
 
-  const noProductsMessage =
-    search && filteredProducts.length === 0 ? <p><Localized id="noProductsFound">No products found.</Localized></p> : null;
+  const createOrder = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/khach_hang_them_don_hang", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create order");
+      }
+
+      setCart([]);
+    } catch (error) {
+      console.error("Error during creating order:", error);
+      alert("Failed to create order");
+    }
+  };
+
+  const noProductsMessage = search && filteredProducts.length === 0 ? (
+    <p>
+      <Localized id="noProductsFound">No products found.</Localized>
+    </p>
+  ) : null;
 
   return (
     <div className="w-full min-h-screen bg-[#f0f0f0] font-roboto">
@@ -125,19 +175,14 @@ function MainComponent() {
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {showCart ? (
           <div className="col-span-full bg-white p-4">
-            <h2 className="text-lg font-semibold mb-4"><Localized id="cart-items">Cart Items:</Localized></h2>
+            <h2 className="text-lg font-semibold mb-4">
+              <Localized id="cart-items">Cart Items:</Localized>
+            </h2>
             <ul>
               {cart.map((item) => (
-                <li
-                  key={item.id}
-                  className="mb-2 flex items-center justify-between"
-                >
+                <li key={item.id} className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-20 h-20 object-cover"
-                    />
+                    <img src={item.image} alt={item.name} className="w-20 h-20 object-cover" />
                     <span>{item.name}</span>
                   </div>
                   <div>
@@ -150,20 +195,16 @@ function MainComponent() {
               ))}
               {cart.length === 0 && <li><Localized id="your-cart-is-empty"></Localized></li>}
             </ul>
+            <button onClick={createOrder} className="bg-[#ff9800] text-white rounded px-6 py-2 hover:bg-[#f57c00] active:bg-[#ef6c00] transition duration-150 ease-in-out">
+              <Localized id="checkout">Checkout</Localized>
+            </button>
           </div>
         ) : (
           <>
             {noProductsMessage}
             {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded overflow-hidden shadow-lg"
-              >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-[200px] object-cover"
-                />
+              <div key={product.id} className="bg-white rounded overflow-hidden shadow-lg">
+                <img src={product.image} alt={product.name} className="w-full h-[200px] object-cover" />
                 <div className="p-4">
                   <h5 className="text-lg text-[#333] mb-2">{product.name}</h5>
                   <p className="text-xl text-[#121212]">
