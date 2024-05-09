@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { Localized, useLocalization } from "@fluent/react";
-
+import { useRouter } from 'next/navigation';
 type Product = {
   id: number;
   name: string;
@@ -12,7 +12,7 @@ type Product = {
 
 function MainComponent() {
   const localization = useLocalization();
-
+  const Router=useRouter();
   const [products, setProducts] = React.useState<Product[]>([]);
   useEffect(() => {
     fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham")
@@ -67,7 +67,7 @@ function MainComponent() {
 
     try {
       const response = await fetch(
-        "https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev//khach_hang_them_1_san_pham_vao_gio_hang?" + params,
+        "https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/khach_hang_them_1_san_pham_vao_gio_hang?" + params,
         {
           method: "PUT",
           headers: {
@@ -115,7 +115,9 @@ function MainComponent() {
   const handleCartClick = () => {
     setShowCart(true);
   };
-
+  const handleProfileClick = () => {
+    Router.push("/user");
+  };
   const handleTitleClick = () => {
     setShowCart(false);
   };
@@ -167,6 +169,12 @@ function MainComponent() {
         </div>
         <button className="relative text-xl" onClick={handleCartClick}>
           🛒
+          <span className="absolute top-0 right-0 rounded-full bg-[#ff0000] px-2 text-sm">
+            {cart.reduce((count, product) => count + product.quantity, 0)}
+          </span>
+        </button>
+        <button className="relative text-xl" onClick={handleProfileClick}>
+          Tài khoản
           <span className="absolute top-0 right-0 rounded-full bg-[#ff0000] px-2 text-sm">
             {cart.reduce((count, product) => count + product.quantity, 0)}
           </span>

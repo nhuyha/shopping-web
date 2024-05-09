@@ -157,6 +157,7 @@ def them_khach_hang(ten,username,password,email,address,phone):
   result=cursor.fetchone()
   if result!= None:
      return None
+  
    
   password=hashlib.blake2b(password.encode('utf-8')).hexdigest()
   cursor.execute('''

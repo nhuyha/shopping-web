@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from 'next/navigation';
-import libsodium from 'libsodium-wrappers';
+import libsodium from 'libsodium-wrappers-sumo';
 import { Buffer } from "buffer";
 
 function MainComponent() {
@@ -23,7 +23,7 @@ function MainComponent() {
   };
   async function dangki(ten: string, username: string, password: string, email: string, address:string, phone:string): Promise<any> {
     await libsodium.ready; console.log(libsodium)
-    password=Buffer.from(libsodium.crypto_pwhash(32,password,new Uint8Array([1,32,16,17,98,77,55]),libsodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,libsodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,libsodium.crypto_pwhash_ALG_ARGON2I13)).toString('base64')
+    password=Buffer.from(libsodium.crypto_pwhash(32,password,new Uint8Array([1,32,16,17,98,77,55,21,56,102,11,24,68,23,14,17]),libsodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,libsodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,libsodium.crypto_pwhash_ALG_DEFAULT)).toString('base64')
     const params= new URLSearchParams()
     params.append('ten',ten)
     params.append('username', username)
