@@ -1,7 +1,9 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Localized, useLocalization } from "@fluent/react";
 import { useRouter } from 'next/navigation';
+import Context from './context'
+
 type Product = {
   id: number;
   name: string;
@@ -55,7 +57,7 @@ function MainComponent() {
 
   const [search, setSearch] = React.useState("");
   const [showCart, setShowCart] = React.useState(false);
-
+  const ngonngu = useContext(Context);
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -115,6 +117,10 @@ function MainComponent() {
   const handleCartClick = () => {
     setShowCart(true);
   };
+  const handleClick = () => {
+    if (ngonngu.ngonngu==='vi-VN') ngonngu.update('en-US')
+      else ngonngu.update('vi-VN')
+  };
   const handleProfileClick = () => {
     Router.push("/user");
   };
@@ -173,6 +179,9 @@ function MainComponent() {
             {cart.reduce((count, product) => count + product.quantity, 0)}
           </span>
         </button>
+        <button className="relative text-xl" onClick={handleClick}>
+          Đổi ngôn ngữ
+          </button>
         <button className="relative text-xl" onClick={handleProfileClick}>
           Tài khoản
           <span className="absolute top-0 right-0 rounded-full bg-[#ff0000] px-2 text-sm">
