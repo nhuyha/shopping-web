@@ -17,7 +17,7 @@ function MainComponent() {
   const Router=useRouter();
   const [products, setProducts] = React.useState<Product[]>([]);
   useEffect(() => {
-    fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/danh_sach_san_pham")
+    fetch("http://127.0.0.1:8000/danh_sach_san_pham")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -35,7 +35,7 @@ function MainComponent() {
   const [cart, setCart] = React.useState<(Product & { quantity: number })[]>([]);
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/du_lieu_gio_hang", {
+    fetch("http://127.0.0.1:8000/du_lieu_gio_hang", {
       headers: {
         accept: "application/json",
         Authorization: "Bearer " + token,
@@ -69,7 +69,7 @@ function MainComponent() {
 
     try {
       const response = await fetch(
-        "https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/khach_hang_them_1_san_pham_vao_gio_hang?" + params,
+        "http://127.0.0.1:8000/khach_hang_them_1_san_pham_vao_gio_hang?" + params,
         {
           method: "PUT",
           headers: {
@@ -132,7 +132,7 @@ function MainComponent() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/khach_hang_them_don_hang", {
+      const response = await fetch("http://127.0.0.1:8000/khach_hang_them_don_hang", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +225,7 @@ function MainComponent() {
                 <div className="p-4">
                   <h5 className="text-lg text-[#333] mb-2">{product.name}</h5>
                   <p className="text-xl text-[#121212]">
-                    ${product.price.toFixed(2)}
+                    ${product.price}
                   </p>
                   <button
                     onClick={() => addToCart(product)}

@@ -168,6 +168,14 @@ def them_khach_hang(ten,username,password,email,address,phone):
   conn.commit()
   return customer_id
 
+def thong_tin_khach_hang(customerid):
+    cursor.execute('''
+        SELECT * FROM Customers
+        WHERE CustomerID=?
+    ''', (customerid,))
+    rows = cursor.fetchall()
+    return rows[0]
+    
 def khach_hang_chinh_sua_thong_tin(CustomerID,CustomerName,Email,Address,PhoneNumber):
     cursor.execute('''
         UPDATE Customers
@@ -368,5 +376,5 @@ def khach_hang_token(token):
         WHERE token = ?
     ''',(token,))
    
-   result=cursor.fetchall()
-   return result[0][0]
+   result=cursor.fetchone()
+   return result[0]

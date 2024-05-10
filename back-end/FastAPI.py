@@ -150,6 +150,11 @@ def khach_hang_them_don_hang(token:Annotated[str, Depends(oauth2_scheme)]):
     CustomerID=database.khach_hang_token(token)
     return database.khach_hang_them_don_hang(CustomerID)
 
+@app.get("/thong_tin_khach_hang")
+def thong_tin_khach_hang(token:Annotated[str,Depends(oauth2_scheme)]):
+    CustomerID=database.khach_hang_token(token)
+    return database.thong_tin_khach_hang(CustomerID)
+
 @app.put("/khach_hang_xoa_gio_hang")
 def khach_hang_xoa_gio_hang(token:Annotated[str, Depends(oauth2_scheme)]):
     customer_id=database.khach_hang_token(token)

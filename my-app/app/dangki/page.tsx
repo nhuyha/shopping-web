@@ -32,7 +32,7 @@ function MainComponent() {
     params.append('address', address)
     params.append('phone',phone)
     try {
-        const response = await fetch("https://organic-guacamole-j6qqg64q74625xx6-8000.app.github.dev/them_khach_hang?" + params, {
+        const response = await fetch("http://127.0.0.1:8000/them_khach_hang?" + params, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

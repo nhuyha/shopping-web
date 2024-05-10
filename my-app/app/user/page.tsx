@@ -1,19 +1,50 @@
 "use client";
-import React from "react";
-
+import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from 'next/navigation';
+import { Localized,useLocalization } from "@fluent/react";
+type Customer={
+  CustomerID:number,
+  CustomerName:string,
+  username:string,
+  password:string,
+  Email:string,
+  Address:string,
+  PhoneNumber: string,
+}
 function MainComponent() {
+  const Router=useRouter();
   const [menu, setMenu] = React.useState("profile");
-
+  const [Customer, setCustomer]= React.useState<Customer>();
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/thong_tin_khach_hang")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCustomer(data);
+      })
+      .catch((error) => {
+        console.error("Fetch Error:", error);
+      });
+  },);
   function handleMenuChange(menuOption) {
     setMenu(menuOption);
   }
+  const handleTitleClick = () => {
+    Router.push("/");
+  };
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-[#121212] font-roboto text-xl">
-          Thông tin tài khoản
+      <header className="flex items-center justify-between bg-[#1a73e8] p-4 text-white">
+        <h1 className="text-3xl cursor-pointer" onClick={handleTitleClick}>
+          Online Marketplace
         </h1>
+        <div className="flex justify-between items-center mb-6">
+        
         <button
           className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded"
           onClick={() => handleMenuChange("logout")}
@@ -21,8 +52,13 @@ function MainComponent() {
           Đăng xuất
         </button>
       </div>
+      </header>
+      
       {menu === "profile" && (
         <div>
+          <h1 className="text-[#121212] font-roboto text-xl">
+          Thông tin tài khoản
+        </h1>
           <div className="mb-4">
             <label className="block font-roboto text-sm text-[#666] mb-2">
               Tên:
