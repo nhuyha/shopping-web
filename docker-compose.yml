@@ -5,8 +5,12 @@ services:
     build: ./back-end
     ports:
       - "8000:8000"
+    volumes:
+      - ./back-end:/app
 
   my-app:
     build: ./my-app
     ports:
       - "3000:3000"
+    volumes:
+      - ./my-app:/app
