@@ -7,4 +7,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["python3", "-m", "uvicorn", "FastAPI:app"]
+CMD ["python3", "-m", "uvicorn", "FastAPI:app","--host","0.0.0.0"]

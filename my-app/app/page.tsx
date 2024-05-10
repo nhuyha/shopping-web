@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Localized, useLocalization } from "@fluent/react";
 import { useRouter } from 'next/navigation';
 import Context from './context'
-
+import {link} from "./link"
 type Product = {
   id: number;
   name: string;
@@ -17,7 +17,7 @@ function MainComponent() {
   const Router=useRouter();
   const [products, setProducts] = React.useState<Product[]>([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/danh_sach_san_pham")
+    fetch(link+"/danh_sach_san_pham")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -35,7 +35,7 @@ function MainComponent() {
   const [cart, setCart] = React.useState<(Product & { quantity: number })[]>([]);
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://127.0.0.1:8000/du_lieu_gio_hang", {
+    fetch(link+"/du_lieu_gio_hang", {
       headers: {
         accept: "application/json",
         Authorization: "Bearer " + token,
@@ -69,7 +69,7 @@ function MainComponent() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/khach_hang_them_1_san_pham_vao_gio_hang?" + params,
+        link+"/khach_hang_them_1_san_pham_vao_gio_hang?" + params,
         {
           method: "PUT",
           headers: {
@@ -132,7 +132,7 @@ function MainComponent() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/khach_hang_them_don_hang", {
+      const response = await fetch(link+"/khach_hang_them_don_hang", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -52,7 +52,10 @@ app = FastAPI()
 origins = [
     "*"
 ]
-
+app2 = FastAPI()
+origins = [
+    "*"
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -70,19 +73,19 @@ def danh_sach_san_pham():
          image_url=row[2], detail=row[3], price=row[4]))
     return danh_sach
 
-@app.put("/them_san_pham")
+@app2.put("/them_san_pham")
 def them_san_pham(ten:str,anh:str, mo_ta:str, gia:int):
     return database.them_san_pham(ten,anh, mo_ta, gia)
 
-@app.put("/xoa_san_pham")
+@app2.put("/xoa_san_pham")
 def xoa_san_pham(product_id:int):
     return database.xoa_san_pham(product_id)
 
-@app.put("/chinh_sua_san_pham")
+@app2.put("/chinh_sua_san_pham")
 def chinh_sua_san_pham(product_id:int, ten_moi:str,anh_moi:str, mo_ta_moi:str, gia_moi:int ):
     return database.chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi)
 
-@app.put("/cap_nhat_tinh_trang_don_hang")
+@app2.put("/cap_nhat_tinh_trang_don_hang")
 def cap_nhat_tinh_trang_don_hang(order_id:int, trang_thai_moi:str):
     return database.cap_nhat_tinh_trang_don_hang(order_id, trang_thai_moi)
 
@@ -115,7 +118,7 @@ def khach_hang_xoa_bot_1_san_pham(token:Annotated[str, Depends(oauth2_scheme)], 
     customer_id=database.khach_hang_token(token)
     return database.khach_hang_xoa_bot_1_san_pham(customer_id, product_id)
 
-@app.get("/danh_sach_don_hang")
+@app2.get("/danh_sach_don_hang")
 def danh_sach_don_hang():
     rows = database.danh_sach_don_hang()
     orders = {}
@@ -160,7 +163,7 @@ def khach_hang_xoa_gio_hang(token:Annotated[str, Depends(oauth2_scheme)]):
     customer_id=database.khach_hang_token(token)
     return database.khach_hang_xoa_gio_hang(customer_id)
 
-@app.get("/danh_sach_khach_hang")
+@app2.get("/danh_sach_khach_hang")
 def danh_sach_khach_hang():
     rows=database.danh_sach_khach_hang()
     khach_hang=[]

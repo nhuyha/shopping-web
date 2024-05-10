@@ -3,6 +3,8 @@ import React from "react";
 import { useRouter } from 'next/navigation';
 import libsodium from 'libsodium-wrappers-sumo';
 import { Buffer } from "buffer";
+import {link} from "../link";
+
 
 function MainComponent() {
     const Router=useRouter();
@@ -32,7 +34,7 @@ function MainComponent() {
     params.append('address', address)
     params.append('phone',phone)
     try {
-        const response = await fetch("http://127.0.0.1:8000/them_khach_hang?" + params, {
+        const response = await fetch(link+"/them_khach_hang?" + params, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

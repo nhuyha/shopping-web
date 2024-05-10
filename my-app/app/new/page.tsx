@@ -1,7 +1,7 @@
 "use client";
 import React,{ useState, useEffect } from "react";
 import { Localized,useLocalization } from "@fluent/react";
-
+import {link} from "../link"
 type Product = {
   id: number,
   name: string,
@@ -27,7 +27,7 @@ function MainComponent() {
   const localization = useLocalization()
   const [products, setProducts] = React.useState<(Product)[]>([]);
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/danh_sach_san_pham')
+    fetch(link+'/danh_sach_san_pham')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -46,7 +46,7 @@ function MainComponent() {
   const [selectedOrder, setSelectedOrder] = React.useState<(Order)>();
   const [orders, setOrders] = React.useState<Order[]>([]);
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/danh_sach_don_hang')
+    fetch('http://127.0.0.1:5000/danh_sach_don_hang')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -66,7 +66,7 @@ function MainComponent() {
     params.append('order_id', String(id))
     params.append('trang_thai_moi', newStatus)
     try {
-      const response = await fetch('http://127.0.0.1:8000/cap_nhat_tinh_trang_don_hang?'+params, {
+      const response = await fetch('http://127.0.0.1:5000/cap_nhat_tinh_trang_don_hang?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ function MainComponent() {
     params.append('gia_moi',String(price))
   
     try {
-      const response = await fetch('http://127.0.0.1:8000/chinh_sua_san_pham?'+params, {
+      const response = await fetch('http://127.0.0.1:5000/chinh_sua_san_pham?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
@@ -125,7 +125,7 @@ function MainComponent() {
     params.append('gia',String(price))
   
     try {
-      const response = await fetch('http://127.0.0.1:8000/them_san_pham?'+params, {
+      const response = await fetch('http://127.0.0.1:5000/them_san_pham?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
@@ -152,7 +152,7 @@ function MainComponent() {
     const params = new URLSearchParams();
     params.append('product_id', String(id))
     try {
-      const response = await fetch('http://127.0.0.1:8000/xoa_san_pham?'+params, {
+      const response = await fetch('http://127.0.0.1:5000/xoa_san_pham?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'

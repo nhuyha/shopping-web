@@ -3,8 +3,9 @@ import React from "react";
 import { useRouter } from 'next/navigation';
 import libsodium from 'libsodium-wrappers-sumo';
 import { Buffer } from "buffer";
-
+import{link} from  "../link"
 function MainComponent() {
+
   const Router=useRouter();
 
   const handleSubmit = (event:React.SyntheticEvent<HTMLFormElement>) => {
@@ -21,7 +22,7 @@ function MainComponent() {
     await libsodium.ready;
     password=Buffer.from(libsodium.crypto_pwhash(32,password,new Uint8Array([1,32,16,17,98,77,55,21,56,102,11,24,68,23,14,17]),libsodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,libsodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,libsodium.crypto_pwhash_ALG_DEFAULT)).toString('base64')
     try {
-        const response = await fetch("http://127.0.0.1:8000/dang_nhap?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), {
+        const response = await fetch(link+"/dang_nhap?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

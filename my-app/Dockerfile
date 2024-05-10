@@ -1,4 +1,4 @@
-FROM alpine3.18
+FROM alpine:3.18
 WORKDIR ./
 
 RUN apk add --update nodejs npm 
