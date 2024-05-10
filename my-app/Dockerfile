@@ -1,6 +1,7 @@
-FROM node:22-alpine3.18
+FROM alpine3.18
 WORKDIR ./
 
+RUN apk add --update nodejs npm 
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install

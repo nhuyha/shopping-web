@@ -184,9 +184,6 @@ function MainComponent() {
           </button>
         <button className="relative text-xl" onClick={handleProfileClick}>
           Tài khoản
-          <span className="absolute top-0 right-0 rounded-full bg-[#ff0000] px-2 text-sm">
-            {cart.reduce((count, product) => count + product.quantity, 0)}
-          </span>
         </button>
       </header>
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

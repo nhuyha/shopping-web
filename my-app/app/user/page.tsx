@@ -11,6 +11,7 @@ type Customer={
   Address:string,
   PhoneNumber: string,
 }
+
 function MainComponent() {
   const Router=useRouter();
   const [menu, setMenu] = React.useState("profile");
@@ -30,8 +31,31 @@ function MainComponent() {
         console.error("Fetch Error:", error);
       });
   },);
-  function handleMenuChange(menuOption) {
-    setMenu(menuOption);
+  function handleMenuChange(menuOption:string) {
+    if (menuOption==="logout"){
+      const token = localStorage.getItem("token");
+      try {
+        const response = fetch(
+          "http://127.0.0.1:8000//xoa_token",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to add product");
+        }
+        Router.push("/login")
+      } catch (error) {
+        alert("Failed to add product");
+        console.error("Error during add product:", error);
+        throw error;
+      }}      
+    else setMenu(menuOption);
+    
   }
   const handleTitleClick = () => {
     Router.push("/");
@@ -53,17 +77,19 @@ function MainComponent() {
         </button>
       </div>
       </header>
-      
-      {menu === "profile" && (
+      <ul>
+      {menu === "profile" &&(
         <div>
           <h1 className="text-[#121212] font-roboto text-xl">
           Thông tin tài khoản
         </h1>
+        
           <div className="mb-4">
+            <span>Name:</span>
             <label className="block font-roboto text-sm text-[#666] mb-2">
               Tên:
             </label>
-            <div className="font-roboto text-[#333]">Nguyen Van A</div>
+            <div className="font-roboto text-[#333]"></div>
           </div>
           <div className="mb-4">
             <label className="block font-roboto text-sm text-[#666] mb-2">
@@ -93,6 +119,7 @@ function MainComponent() {
             </label>
             <div className="font-roboto text-[#333]">0123456789</div>
           </div>
+      
           <button
             className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded mb-4"
             onClick={() => handleMenuChange("changePassword")}
@@ -106,7 +133,7 @@ function MainComponent() {
             Thay đổi thông tin cá nhân
           </button>
         </div>
-      )}
+      )}</ul>
 
       {menu === "changePassword" && (
         <div>
