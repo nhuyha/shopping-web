@@ -12,7 +12,11 @@ class Product:
         self.image_url = image_url
         self.detail = detail
         self.price = price
-
+class product(BaseModel):
+            ten:str
+            anh:str
+            mo_ta:str
+            gia:int
 class OrderDetail:
     def __init__(self,product_id:int,quantity:int,price:int):
         self.product_id=product_id
@@ -72,10 +76,19 @@ def danh_sach_san_pham():
         danh_sach.append(Product(id=row[0], name=row[1],
          image_url=row[2], detail=row[3], price=row[4]))
     return danh_sach
+@app2.get("/danh_sach_san_pham")
+def danh_sach_san_pham():
+    rows = database.danh_sach_san_pham()
+    danh_sach=[]
+    for row in rows:
+        danh_sach.append(Product(id=row[0], name=row[1],
+         image_url=row[2], detail=row[3], price=row[4]))
 
+    return danh_sach
+    
 @app2.put("/them_san_pham")
-def them_san_pham(ten:str,anh:str, mo_ta:str, gia:int):
-    return database.them_san_pham(ten,anh, mo_ta, gia)
+def them_san_pham(product:product):
+    return database.them_san_pham(product.ten,product.anh,product.mo_ta,product.gia)
 
 @app2.put("/xoa_san_pham")
 def xoa_san_pham(product_id:int):

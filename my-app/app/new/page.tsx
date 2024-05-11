@@ -46,7 +46,7 @@ function MainComponent() {
   const [selectedOrder, setSelectedOrder] = React.useState<(Order)>();
   const [orders, setOrders] = React.useState<Order[]>([]);
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/danh_sach_don_hang')
+    fetch(link+'/danh_sach_don_hang')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -66,7 +66,7 @@ function MainComponent() {
     params.append('order_id', String(id))
     params.append('trang_thai_moi', newStatus)
     try {
-      const response = await fetch('http://127.0.0.1:5000/cap_nhat_tinh_trang_don_hang?'+params, {
+      const response = await fetch(link+'/cap_nhat_tinh_trang_don_hang?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ function MainComponent() {
     params.append('gia_moi',String(price))
   
     try {
-      const response = await fetch('http://127.0.0.1:5000/chinh_sua_san_pham?'+params, {
+      const response = await fetch(link+'/chinh_sua_san_pham?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
@@ -125,11 +125,17 @@ function MainComponent() {
     params.append('gia',String(price))
   
     try {
-      const response = await fetch('http://127.0.0.1:5000/them_san_pham?'+params, {
+      const response = await fetch(link+'/them_san_pham', {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
           },
+          body:JSON.stringify({
+            "ten":name,
+            "anh":imageUrl,
+            "mo_ta":detail,
+            "gia":price
+          })
       });
       if (!response.ok) {
           throw new Error('Failed to add product');
@@ -152,7 +158,7 @@ function MainComponent() {
     const params = new URLSearchParams();
     params.append('product_id', String(id))
     try {
-      const response = await fetch('http://127.0.0.1:5000/xoa_san_pham?'+params, {
+      const response = await fetch(link+'/xoa_san_pham?'+params, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
@@ -191,16 +197,27 @@ function MainComponent() {
     );
     event.currentTarget.reset();
   };
-
+  const [base64, setBase64] = React.useState("");
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setBase64(reader.result);
+      };
+    }
+  }
   const handleAddProduct = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     addProduct(
       form.get("name") as string,
-      form.get("imageUrl") as string ,
+      base64 ,
       form.get("detail") as string,
       parseInt(form.get("price") as string),
     );
+    
     event.currentTarget.reset();
   };
 
@@ -223,12 +240,13 @@ function MainComponent() {
               required
             />
             <input
-              type="text"
-              name="imageUrl"
-              placeholder={localization.l10n.getString("product-image")}
-              className="border p-1 rounded"
-              required
-            />
+            type="file"
+            id="file-upload"
+            name="image"
+            accept="image/*"
+            className="block w-full text-sm text-[#666] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#f4f4f4] file:text-[#333]"
+            onChange={handleFileChange}
+          />
             <textarea
               name="detail"
               placeholder={localization.l10n.getString("product-detail")}
@@ -257,7 +275,6 @@ function MainComponent() {
             >
               <img
                 src={product.image_url}
-                alt={<Localized id="productImage">Image of {product.name}</Localized>}
                 className="h-20 my-2"
               />
               <p><Localized id="name"></Localized>: {product.name}</p>

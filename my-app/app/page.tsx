@@ -3,17 +3,16 @@ import React, { useState, useEffect, useContext } from "react";
 import { Localized, useLocalization } from "@fluent/react";
 import { useRouter } from 'next/navigation';
 import Context from './context'
-import {link2} from "./link"
+import {link} from "./link"
 type Product = {
   id: number;
   name: string;
-  image: string;
+  image_url: string;
   detail: string;
   price: number;
 };
 
 function MainComponent() {
-  const link= link2
   const localization = useLocalization();
   const Router=useRouter();
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -197,7 +196,7 @@ function MainComponent() {
               {cart.map((item) => (
                 <li key={item.id} className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <img src={item.image} alt={item.name} className="w-20 h-20 object-cover" />
+                    <img src={item.image_url} alt={item.name} className="w-20 h-20 object-cover" />
                     <span>{item.name}</span>
                   </div>
                   <div>
@@ -223,7 +222,7 @@ function MainComponent() {
             {noProductsMessage}
             {filteredProducts.map((product) => (
               <div key={product.id} className="bg-white rounded overflow-hidden shadow-lg">
-                <img src={product.image} alt={product.name} className="w-full h-[200px] object-cover" />
+                <img src={product.image_url} alt={product.name} className="w-full h-[200px] object-cover" />
                 <div className="p-4">
                   <h5 className="text-lg text-[#333] mb-2">{product.name}</h5>
                   <p className="text-xl text-[#121212]">
