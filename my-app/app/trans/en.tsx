@@ -33,4 +33,13 @@ update = Update
 Delivered = Delivered
 Delivering = Delivering
 delete= Delete
+Username=Username
+Password=Password
+Account=Account
+Language=Switch language
+remove=remove
+logout= Logout
+Profile=My Profile
+ChangePassword=Change Password
+ChangeProfile=Change Profile
 `

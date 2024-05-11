@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from 'next/navigation';
 
 import { Localized,useLocalization } from "@fluent/react";
-import {link} from "../link"
+import {link2} from "../link"
 type Customer = {
   CustomerID: number;
   CustomerName: string;
@@ -16,6 +16,7 @@ type Customer = {
 
 // MainComponent definition
 function MainComponent() {
+  const link=link2
   const Router = useRouter();
   const [customer, setCustomer] = useState<Customer | null>(null);
 
@@ -114,44 +115,45 @@ function MainComponent() {
           className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded"
           onClick={handleLogout}
         >
-          Đăng xuất
+          <Localized id="logout"></Localized>
         </button>
       </header>
 
       <div>
-        <h1 className="text-[#121212] font-roboto text-xl">
-          Thông tin tài khoản
+        <h1 className="text-[#121212] font-roboto text-2xl">
+        <Localized id="Profile"></Localized>
+          
         </h1>
         {/* Display customer information if available */}
         {customer && (
           <>
             <div className="mb-4">
               <label className="block font-roboto text-sm text-[#666] mb-2">
-                Name:
+              <Localized id="name"></Localized>:
               </label>
               <div className="font-roboto text-[#333]">{customer.CustomerName}</div>
             </div>
             <div className="mb-4">
               <label className="block font-roboto text-sm text-[#666] mb-2">
-                Username:
+              <Localized id="Username"></Localized>:
               </label>
               <div className="font-roboto text-[#333]">{customer.username}</div>
             </div>
             <div className="mb-4">
               <label className="block font-roboto text-sm text-[#666] mb-2">
-                Email:
+              <Localized id="Email"></Localized>:
               </label>
               <div className="font-roboto text-[#333]">{customer.Email}</div>
             </div>
             <div className="mb-4">
               <label className="block font-roboto text-sm text-[#666] mb-2">
-                Address:
+              <Localized id="address"></Localized>:
               </label>
               <div className="font-roboto text-[#333]">{customer.Address}</div>
             </div>
             <div className="mb-4">
               <label className="block font-roboto text-sm text-[#666] mb-2">
-                Phone Number:
+              <Localized id="phone"></Localized>:
               </label>
               <div className="font-roboto text-[#333]">{customer.PhoneNumber}</div>
             </div>
@@ -163,13 +165,14 @@ function MainComponent() {
           className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded mb-4"
           onClick={() => handleChangePassword({ oldPassword: '', newPassword: '' })}  // Example structure, update as needed
         >
-          Thay đổi mật khẩu
+          <Localized id="ChangePassword"></Localized>
         </button>
+          
         <button
           className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded"
           onClick={() => handleChangeProfile({ name: '', email: '', address: '', phoneNumber: '' })}  // Example structure, update as needed
         >
-          Thay đổi thông tin cá nhân
+          <Localized id="ChangeProfile"></Localized>
         </button>
       </div>
     </div>

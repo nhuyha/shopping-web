@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Localized, useLocalization } from "@fluent/react";
 import { useRouter } from 'next/navigation';
 import Context from './context'
-import {link} from "./link"
+import {link2} from "./link"
 type Product = {
   id: number;
   name: string;
@@ -13,6 +13,7 @@ type Product = {
 };
 
 function MainComponent() {
+  const link= link2
   const localization = useLocalization();
   const Router=useRouter();
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -180,17 +181,17 @@ function MainComponent() {
           </span>
         </button>
         <button className="relative text-xl" onClick={handleClick}>
-          Đổi ngôn ngữ
+        <Localized id="Language"></Localized>
           </button>
         <button className="relative text-xl" onClick={handleProfileClick}>
-          Tài khoản
+        <Localized id="Account"></Localized>
         </button>
       </header>
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {showCart ? (
           <div className="col-span-full bg-white p-4">
             <h2 className="text-lg font-semibold mb-4">
-              <Localized id="cart-items">Cart Items:</Localized>
+              <Localized id="cart-items"></Localized>
             </h2>
             <ul>
               {cart.map((item) => (
@@ -200,17 +201,21 @@ function MainComponent() {
                     <span>{item.name}</span>
                   </div>
                   <div>
-                    <button onClick={() => adjustQuantity(item.id, item.quantity - 1)}>-</button>
-                    <span><Localized id="quantity"></Localized>: {item.quantity}</span>
+                    <span>
+                      <Localized id="quantity"></Localized>: 
+                    <button onClick={() => adjustQuantity(item.id, item.quantity - 1)}>
+                      -</button>{item.quantity}
                     <button onClick={() => adjustQuantity(item.id, item.quantity + 1)}>+</button>
-                    <button onClick={() => removeFromCart(item.id)}>Remove</button>
+                    </span>
+                    
+                    <button onClick={() => removeFromCart(item.id)}> <Localized id="remove"></Localized></button>
                   </div>
                 </li>
               ))}
               {cart.length === 0 && <li><Localized id="your-cart-is-empty"></Localized></li>}
             </ul>
             <button onClick={createOrder} className="bg-[#ff9800] text-white rounded px-6 py-2 hover:bg-[#f57c00] active:bg-[#ef6c00] transition duration-150 ease-in-out">
-              <Localized id="checkout">Checkout</Localized>
+              <Localized id="checkout"></Localized>
             </button>
           </div>
         ) : (

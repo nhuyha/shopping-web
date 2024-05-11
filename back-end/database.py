@@ -378,3 +378,12 @@ def khach_hang_token(token):
    
    result=cursor.fetchone()
    return result[0]
+
+def danh_sach_token():
+   cursor.execute('''
+    SELECT *
+        FROM TOKEN
+    ''',)
+   
+   result=cursor.fetchall()
+   return result

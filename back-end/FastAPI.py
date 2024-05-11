@@ -156,7 +156,8 @@ def khach_hang_them_don_hang(token:Annotated[str, Depends(oauth2_scheme)]):
 @app.get("/thong_tin_khach_hang")
 def thong_tin_khach_hang(token:Annotated[str,Depends(oauth2_scheme)]):
     CustomerID=database.khach_hang_token(token)
-    return database.thong_tin_khach_hang(CustomerID)
+    customer=database.thong_tin_khach_hang(CustomerID)
+    return Customer(customer[0],customer[1],customer[2],customer[3],customer[4],customer[5],customer[6])
 
 @app.put("/khach_hang_xoa_gio_hang")
 def khach_hang_xoa_gio_hang(token:Annotated[str, Depends(oauth2_scheme)]):
@@ -187,5 +188,8 @@ def dang_nhap(username:str, password: str):
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     username=form_data.username
     password=form_data.password
-
     return {"access_token": database.dang_nhap(username,password), "token_type": "bearer"}
+
+@app2.get("/danh_sach_token")
+def danh_sach_token():
+    return database.danh_sach_token()

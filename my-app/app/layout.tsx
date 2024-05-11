@@ -27,7 +27,7 @@ function* generateBundles(userLocales: readonly string[]) {
     const currentLocales = negotiateLanguages(
         userLocales,
         ['vi-VN', 'en-US'],
-        { defaultLocale: 'vi-VN' }
+        { defaultLocale: 'en-US' }
     );
 
     for (const locale of currentLocales) {

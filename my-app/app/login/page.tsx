@@ -3,11 +3,13 @@ import React from "react";
 import { useRouter } from 'next/navigation';
 import libsodium from 'libsodium-wrappers-sumo';
 import { Buffer } from "buffer";
-import{link} from  "../link"
+import{link2} from  "../link"
+import { Localized, useLocalization } from "@fluent/react";
+
 function MainComponent() {
 
   const Router=useRouter();
-
+  const link=link2
   const handleSubmit = (event:React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -63,7 +65,8 @@ function MainComponent() {
             className="block text-lg font-roboto text-[#333] mb-2"
             htmlFor="username"
           >
-            Tên đăng nhập
+            
+            <Localized id="Username"></Localized>
           </label>
           <input
             name="username"
@@ -79,7 +82,7 @@ function MainComponent() {
             className="block text-lg font-roboto text-[#333] mb-2"
             htmlFor="password"
           >
-            Mật khẩu
+            <Localized id="Password"></Localized>
           </label>
           <input
             name="password"
@@ -95,7 +98,7 @@ function MainComponent() {
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            Đăng nhập
+            <Localized id="submit"></Localized>
           </button>
         </div>
       </form>
