@@ -52,7 +52,7 @@ function MainComponent() {
       })
       .catch((error) => {
         console.error("Fetch Error:", error);
-      });
+      })
   }, []);
 
   const [search, setSearch] = React.useState("");

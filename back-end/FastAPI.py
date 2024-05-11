@@ -176,7 +176,7 @@ def them_token(Customer_id:int):
     return database.them_token(Customer_id)
 
 @app.put("/xoa_token")
-def xoa_token(token:str):
+def xoa_token(token:Annotated[str, Depends(oauth2_scheme)]):
     return database.xoa_token(token)
 
 @app.post("/dang_nhap")
