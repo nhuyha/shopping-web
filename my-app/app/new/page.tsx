@@ -179,7 +179,7 @@ function MainComponent() {
     setSelectedOrder(order);
   };
 
-  const handleProductUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProductUpdate = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);

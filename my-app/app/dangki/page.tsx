@@ -3,12 +3,11 @@ import React from "react";
 import { useRouter } from 'next/navigation';
 import libsodium from 'libsodium-wrappers-sumo';
 import { Buffer } from "buffer";
-import {link2} from "../link";
+import {link} from "../link";
 
 
 function MainComponent() {
   const Router=useRouter();
-  const link=link2
   const handleSubmit = (event:React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;

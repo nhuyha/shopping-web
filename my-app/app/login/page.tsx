@@ -3,13 +3,12 @@ import React from "react";
 import { useRouter } from 'next/navigation';
 import libsodium from 'libsodium-wrappers-sumo';
 import { Buffer } from "buffer";
-import{link2} from  "../link"
+import{link} from  "../link"
 import { Localized, useLocalization } from "@fluent/react";
 
 function MainComponent() {
-
+  const localization = useLocalization();
   const Router=useRouter();
-  const link=link2
   const handleSubmit = (event:React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -60,6 +59,9 @@ function MainComponent() {
         onSubmit={handleSubmit}
         className="w-full max-w-[400px] p-8 bg-white shadow-md rounded"
       >
+        <h1 className="text-2xl font-bold mb-4 text-center">
+        <Localized id="Login"></Localized>
+      </h1>
         <div className="mb-4">
           <label
             className="block text-lg font-roboto text-[#333] mb-2"
@@ -73,7 +75,7 @@ function MainComponent() {
             id="username"
             type="text"
             required
-            placeholder="Nhập tên đăng nhập"
+            placeholder={localization.l10n.getString("Enter-username")}
             className="w-full px-3 py-2 border rounded text-lg text-[#333]"
           />
         </div>
@@ -89,8 +91,7 @@ function MainComponent() {
             id="password"
             type="password"
             required
-            placeholder="Nhập mật khẩu"
-            className="w-full px-3 py-2 border rounded text-lg text-[#333]"
+            placeholder={localization.l10n.getString("Enter-password")}            className="w-full px-3 py-2 border rounded text-lg text-[#333]"
           />
         </div>
         <div className="flex items-center justify-between">

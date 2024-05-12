@@ -42,4 +42,7 @@ logout=Đăng xuất
 Profile=Thông tin tài khoản
 ChangePassword = Thay đổi mật khẩu
 ChangeProfile = Thay đổi thông tin cá nhân
+Enter-password=Nhập mật khẩu
+Enter-username=Nhập tên đăng nhập
+Login=Đăng nhập
 `

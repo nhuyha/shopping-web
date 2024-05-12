@@ -188,6 +188,16 @@ def khach_hang_chinh_sua_thong_tin(CustomerID,CustomerName,Email,Address,PhoneNu
     ''', (CustomerName,Email,Address,PhoneNumber,CustomerID))
     conn.commit()
 
+def khach_hang_doi_mat_khau(CustomerID,password):
+   password=hashlib.blake2b(password.encode('utf-8')).hexdigest()
+   cursor.execute('''
+        UPDATE Customers
+        SET password=?
+            
+        WHERE CustomerID = ?
+    ''', (password,CustomerID))
+   conn.commit()
+
 def khach_hang_xoa_san_pham_khoi_gio_hang(customer_id, product_id):
 
     # Thực thi truy vấn SQL để xóa sản phẩm khỏi bảng ShoppingCart
@@ -368,6 +378,19 @@ def dang_nhap(username,password):
       return them_token(Customer_id)
     else:
       return None
+def khach_hang_xac_minh(customerid,password):
+    password=hashlib.blake2b(password.encode('utf-8')).hexdigest()
+    cursor.execute('''
+    SELECT *
+        FROM Customers
+        WHERE CustomerID = ? AND password = ?
+    ''',(customerid,password))
+   
+    result=cursor.fetchall()
+    if result:
+        return customerid
+    else:
+        return None
     
 def khach_hang_token(token):
    cursor.execute('''

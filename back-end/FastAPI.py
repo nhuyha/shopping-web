@@ -118,6 +118,16 @@ def khach_hang_chinh_sua_thong_tin(token:Annotated[str, Depends(oauth2_scheme)],
     CustomerID=database.khach_hang_token(token)
     return database.khach_hang_chinh_sua_thong_tin(CustomerID,CustomerName,Email,Address,PhoneNumber)
 
+@app.put("/khach_hang_doi_mat_khau")
+def khach_hang_doi_mat_khau(token:Annotated[str, Depends(oauth2_scheme)],newPassword:str):
+    CustomerID=database.khach_hang_token(token)
+    return database.khach_hang_doi_mat_khau(CustomerID,newPassword)
+    
+@app.get("/khach_hang_xac_minh")
+def khach_hang_xac_minh(token:Annotated[str, Depends(oauth2_scheme)],password:str):
+    CustomerID=database.khach_hang_token(token)
+    return database.khach_hang_xac_minh(CustomerID,password)
+
 @app.put("/khach_hang_xoa_san_pham_khoi_gio_hang")
 def khach_hang_xoa_san_pham_khoi_gio_hang(token:Annotated[str, Depends(oauth2_scheme)], product_id:int):
     customer_id=database.khach_hang_token(token)
