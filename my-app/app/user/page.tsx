@@ -21,19 +21,22 @@ function MainComponent() {
   const [customer, setCustomer] = useState<Customer | null>(null);
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      fetch(`${link}/thong_tin_khach_hang`, {
-        headers: {
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
+    
+      fetch(link+"/thong_tin_khach_hang", {
+        method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: "Bearer " + token,
+          },
       })
       .then(response => response.json())
-      .then(setCustomer)
+      .then(data=>{
+        setCustomer(data)
+      })
       .catch(error => {
         console.error("Fetch error:", error);
       });
-    }
+    
   }, []);
   const [changePassword, setChangePassword] = React.useState(false);
   const [changeProfile, setChangeProfile] = React.useState(false);
@@ -253,7 +256,7 @@ function MainComponent() {
             </form>
           </div>)}
             <>
-            {ShowProfile&&customer && (
+            {ShowProfile && customer && (
             <>
             <div className="mb-4">
               <label className="block font-roboto text-sm text-[#666] mb-2">
@@ -289,7 +292,7 @@ function MainComponent() {
           )}
           </>
 
-        {changeProfile &&(
+        {changeProfile&&customer &&(
           <div className="col-span-full bg-white p-4">
             <form
               onSubmit={handleChangeProfile}
@@ -310,7 +313,7 @@ function MainComponent() {
               id="CustomerName"
               type="text"
               required
-              placeholder={localization.l10n.getString("")}
+              placeholder={customer.CustomerName}
               className="w-full px-3 py-2 border rounded text-lg text-[#333]"
               />
               </div>
@@ -326,7 +329,7 @@ function MainComponent() {
               id="Email"
               type="text"
               required
-              placeholder={localization.l10n.getString("")}
+              placeholder={customer.Email}
               className="w-full px-3 py-2 border rounded text-lg text-[#333]"
               />
               </div>
@@ -343,7 +346,7 @@ function MainComponent() {
               id="Address"
               type="text"
               required
-              placeholder={localization.l10n.getString("")}
+              placeholder={customer.Address}
               className="w-full px-3 py-2 border rounded text-lg text-[#333]"
               />
               </div>
@@ -356,11 +359,11 @@ function MainComponent() {
                 <Localized id="phone"></Localized>
               </label>
               <input
-              name="oldPassword"
-              id="oldPassword"
+              name="PhoneNumber"
+              id="PhoneNumber"
               type="text"
               required
-              placeholder={localization.l10n.getString("")}
+              placeholder={customer.PhoneNumber}
               className="w-full px-3 py-2 border rounded text-lg text-[#333]"
               />
               </div>
