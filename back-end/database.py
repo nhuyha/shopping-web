@@ -87,11 +87,16 @@ cursor.execute('''
 cursor.execute('''
                CREATE TABLE IF NOT EXISTS TOKEN (
                CustomerID INTEGER,
-               Token TEXT NOT NULL,
+               Token TEXT UNIQUE NOT NULL,
                FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
                )
                ''')
 # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
+conn.commit()
+cursor.execute('''
+               
+CREATE INDEX abc
+ON Cart (CustomerID, ProductID)''')
 conn.commit()
 
 def them_san_pham(ten,anh, mo_ta, gia):
@@ -262,6 +267,7 @@ def khach_hang_them_1_san_pham_vao_gio_hang(customer_id, product_id):
     ''', (customer_id, product_id, 1))
     # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
     conn.commit()
+    
 
 def khach_hang_xoa_bot_1_san_pham(customer_id, product_id):
   if(in_so_luong_san_pham_trong_gio_hang(customer_id, product_id)==1):
