@@ -13,6 +13,13 @@ class Product:
         self.detail = detail
         self.price = price
 class product(BaseModel):
+            id:int
+            ten:str
+            anh:str
+            mo_ta:str
+            gia:int
+class product1(BaseModel):
+            
             ten:str
             anh:str
             mo_ta:str
@@ -87,7 +94,7 @@ def danh_sach_san_pham():
     return danh_sach
     
 @app2.put("/them_san_pham")
-def them_san_pham(product:product):
+def them_san_pham(product:product1):
     return database.them_san_pham(product.ten,product.anh,product.mo_ta,product.gia)
 
 @app2.put("/xoa_san_pham")
@@ -95,8 +102,8 @@ def xoa_san_pham(product_id:int):
     return database.xoa_san_pham(product_id)
 
 @app2.put("/chinh_sua_san_pham")
-def chinh_sua_san_pham(product_id:int, ten_moi:str,anh_moi:str, mo_ta_moi:str, gia_moi:int ):
-    return database.chinh_sua_san_pham(product_id, ten_moi,anh_moi, mo_ta_moi, gia_moi)
+def chinh_sua_san_pham(product:product):
+    return database.chinh_sua_san_pham(product.id, product.ten,product.anh, product.mo_ta, product.gia)
 
 @app2.put("/cap_nhat_tinh_trang_don_hang")
 def cap_nhat_tinh_trang_don_hang(order_id:int, trang_thai_moi:str):

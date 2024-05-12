@@ -87,19 +87,20 @@ function MainComponent() {
   };
 
   const updateProduct = async (id:number, name:string, imageUrl:string, detail:string, price:number) => {
-    const params = new URLSearchParams();
-    params.append('product_id', String(id))
-    params.append('ten_moi', name)
-    params.append('anh_moi', imageUrl)
-    params.append('mo_ta_moi', detail)
-    params.append('gia_moi',String(price))
-  
+    
     try {
-      const response = await fetch(link+'/chinh_sua_san_pham?'+params, {
+      const response = await fetch(link+'/chinh_sua_san_pham', {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json'
           },
+          body:JSON.stringify({
+            "id":id,
+            "ten":name,
+            "anh":imageUrl,
+            "mo_ta":detail,
+            "gia":price
+          })
       });
       if (!response.ok) {
           throw new Error('Failed to add product');
@@ -118,13 +119,7 @@ function MainComponent() {
   };
 
   const addProduct = async(name:string, imageUrl:string, detail:string, price:number) => {
-    const params = new URLSearchParams();
-    params.append('ten', name)
-    params.append('anh', imageUrl)
-    params.append('mo_ta', detail)
-    params.append('gia',String(price))
-  
-    try {
+      try {
       const response = await fetch(link+'/them_san_pham', {
           method: 'PUT',
           headers: {
@@ -184,14 +179,14 @@ function MainComponent() {
     setSelectedOrder(order);
   };
 
-  const handleProductUpdate = (event: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleProductUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
     updateProduct(
       selectedProduct!.id,
       formData.get("name") as string,
-      formData.get("imageUrl") as string ,
+      base64,
       formData.get("detail") as string,
       parseInt(formData.get("price") as string),
     );
@@ -297,10 +292,12 @@ function MainComponent() {
                 defaultValue={selectedProduct.name}
               />
               <input
-                type="text"
-                name="imageUrl"
+                type="file"
+                id="file-upload"
+                name="image"
+                accept="image/*"
                 className="border p-1 rounded"
-                defaultValue={selectedProduct.image_url}
+                onChange={handleFileChange}
               />
               <textarea
                 name="detail"
