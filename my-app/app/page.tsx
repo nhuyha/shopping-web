@@ -143,9 +143,29 @@ function MainComponent() {
       if (!response.ok) {
         throw new Error("Failed to create order");
       }
-
+      const data=await response.json()
       setCart([]);
-    } catch (error) {
+      {
+        const currentUrl = window.location.href;
+        const domain = currentUrl.split('/')[2];
+        const newUrl = `https://${domain}/giaodich`;
+
+        console.log(newUrl);
+        const response = await fetch(link+"/link_thanh_toan?OrderID="+encodeURIComponent(data)+"&vnp_return_url="+encodeURIComponent(newUrl), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to create order");
+        }
+        const data2 =await response.json()
+        location.href=(data2)
+    }} catch (error) {
       console.error("Error during creating order:", error);
       alert("Failed to create order");
     }

@@ -45,6 +45,7 @@ cursor.execute('''
         OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         TotalAmount DECIMAL(10, 2) NOT NULL,
         Status TEXT NOT NULL,
+        Paid INTEGER NOT NULL,
         FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
     )
 ''')
@@ -95,7 +96,7 @@ cursor.execute('''
 conn.commit()
 cursor.execute('''
                
-CREATE INDEX abc
+CREATE INDEX IF NOT EXISTS abc
 ON Cart (CustomerID, ProductID)''')
 conn.commit()
 
@@ -285,7 +286,7 @@ def danh_sach_san_pham():
 
 def danh_sach_don_hang():
     cursor.execute('''
-    SELECT o.OrderID, o.TotalAmount, o.Status,
+    SELECT o.OrderID, o.TotalAmount, o.Status,o.Paid
      c.CustomerName, c.Address, c.PhoneNumber, od.ProductID, od.Quantity, p.Price
     FROM Orders o
     JOIN Customers c ON o.CustomerID = c.CustomerID
@@ -310,15 +311,16 @@ def du_lieu_gio_hang(CustomerID):
 def khach_hang_them_don_hang(CustomerID):
     OrderDate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     Status="Preparing"
+    Paid =0
     TotalAmount=0
     gio_hang=du_lieu_gio_hang(CustomerID)
 
     for san_pham in gio_hang:
         TotalAmount=TotalAmount+san_pham[1]*san_pham[3]
     cursor.execute('''
-        INSERT INTO Orders (CustomerID, OrderDate,TotalAmount,Status)
-        VALUES (?, ?, ?, ?)
-    ''', (CustomerID, OrderDate,TotalAmount,Status))
+        INSERT INTO Orders (CustomerID, OrderDate,TotalAmount,Status,Paid)
+        VALUES (?, ?, ?, ?,?)
+    ''', (CustomerID, OrderDate,TotalAmount,Status,Paid))
     OrderID = cursor.lastrowid
 
     for san_pham in gio_hang:
@@ -416,3 +418,30 @@ def danh_sach_token():
    
    result=cursor.fetchall()
    return result
+
+def thong_tin_don_hang(OrderID,customerId):
+    cursor.execute('''
+    SELECT TotalAmount,Status, Paid
+    FROM Orders 
+    WHERE OrderID = ? AND CustomerID=?
+    ''', (OrderID,customerId))
+    rows = cursor.fetchall()
+    return rows
+
+def thong_tin_don_hang_2(OrderID):
+    cursor.execute('''
+    SELECT TotalAmount
+    FROM Orders 
+    WHERE OrderID = ?
+    ''', (OrderID,))
+    rows = cursor.fetchall()
+    return rows[0][0]
+
+def cap_nhat_thanh_toan(OrderID):
+    cursor.execute('''
+    UPDATE Orders
+    SET Paid=?
+    WHERE OrderID = ?
+    ''', (1,OrderID,))
+    conn.commit()
+    
