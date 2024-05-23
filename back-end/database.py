@@ -75,6 +75,8 @@ cursor.execute('''
         PhoneNumber TEXT
     )
 ''')
+
+#Bảng giỏ hàng
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Cart (
         CustomerID INTEGER,
@@ -84,7 +86,7 @@ cursor.execute('''
         FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
     )
 ''')
-
+#Token
 cursor.execute('''
                CREATE TABLE IF NOT EXISTS TOKEN (
                CustomerID INTEGER,
@@ -92,6 +94,18 @@ cursor.execute('''
                FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
                )
                ''')
+# Rating
+cursor.execute('''CREATE TABLE IF NOT EXISTS Ratings (
+    RatingID INTEGER PRIMARY KEY AUTOINCREMENT,
+    CustomerID INTEGER NOT NULL,
+    ProductID INTEGER NOT NULL,
+    Rating INTEGER NOT NULL CHECK (Rating >= 1 AND Rating <= 5),
+    Review TEXT,
+    RatingDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+    )
+''')
 # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
 conn.commit()
 cursor.execute('''

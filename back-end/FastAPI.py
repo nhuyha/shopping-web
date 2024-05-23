@@ -96,6 +96,7 @@ def danh_sach_san_pham():
         danh_sach.append(Product(id=row[0], name=row[1],
          image_url=row[2], detail=row[3], price=row[4]))
     return danh_sach
+
 @app2.get("/danh_sach_san_pham")
 def danh_sach_san_pham():
     rows = database.danh_sach_san_pham()
