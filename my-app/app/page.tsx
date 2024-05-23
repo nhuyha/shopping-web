@@ -56,6 +56,7 @@ function MainComponent() {
   }, []);
 
   const [search, setSearch] = React.useState("");
+  const [selectedProduct, setSelectedProduct] = React.useState<Product>(null);
   const [showCart, setShowCart] = React.useState(false);
   const ngonngu = useContext(Context);
   const filteredProducts = products.filter((product) =>
@@ -126,8 +127,11 @@ function MainComponent() {
   };
   const handleTitleClick = () => {
     setShowCart(false);
+    setSelectedProduct(null);
   };
-
+  const handleProductClick = (product:Product) => {
+    setSelectedProduct(product);
+  };
   const createOrder = async () => {
     const token = localStorage.getItem("token");
 
@@ -206,6 +210,35 @@ function MainComponent() {
           👤
         </button>
       </header>
+      
+      {selectedProduct ? (
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-[600px] mx-auto">
+          <button
+            onClick={() => setSelectedProduct(null)}
+            className="text-[#010101] mb-4 font-bold"
+          >
+            &#x2190; Back to products
+          </button>
+          <img
+            src={selectedProduct.image_url}
+            alt={selectedProduct.name}
+            className="w-full h-[300px] object-cover mb-4 rounded"
+          />
+          <h2 className="text-3xl font-semibold mb-2">
+            {selectedProduct.name}
+          </h2>
+          <p className="text-[#121212] mb-2">{selectedProduct.price}</p>
+          {/* <p className="text-gray-700 text-md mb-4">
+            {selectedProduct.description}
+          </p> */}
+          <button
+            onClick={()=>addToCart(selectedProduct)}
+            className="bg-[#010101] text-white px-4 py-2 rounded"
+          >
+            Add to Cart
+          </button>
+        </div>
+      ) :(
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {showCart ? (
           <div className="col-span-full bg-white p-4 shadow-md">
@@ -249,27 +282,34 @@ function MainComponent() {
           <>
             {noProductsMessage}
             {filteredProducts.map((product) => (
-              <div key={product.id} className="bg-white rounded overflow-hidden shadow-lg">
-                
-                <img src={product.image_url} alt={product.name} className="w-full h-[200px] object-cover" />
-                <div className="p-4">
-                  
-                  <h5 className="text-lg text-black mb-2">{product.name}</h5>
-                  <p className="text-xl text-gray-700">
-                    ${product.price}
-                  </p>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="mt-3 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
-                  >
-                    <Localized id="add-to-cart"></Localized>
-                  </button>
-                </div>
+              <div
+              key={product.id}
+              className="bg-white rounded overflow-hidden shadow-lg"
+              onClick={() => handleProductClick(product)}
+            >
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="w-full h-[200px] object-cover"
+              />
+              <div className="p-4">
+                <h5 className="text-lg text-black mb-2">{product.name}</h5>
+                <p className="text-xl text-gray-700">${product.price}</p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the click from bubbling up to the div
+                    addToCart(product);
+                  }}
+                  className="mt-3 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
+                >
+                  <Localized id="add-to-cart"></Localized>
+                </button>
               </div>
+            </div>
             ))}
           </>
         )}
-      </main>
+      </main>)}
     </div>
   );
 }
