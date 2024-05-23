@@ -102,6 +102,18 @@ function MainComponent() {
             <Localized id="submit"></Localized>
           </button>
         </div>
+        <div>
+        <p className="text-center">
+          Bạn chưa có tài khoản?{" "}
+          <a
+            href="#"
+            onClick={() => Router.push("/dangki")}
+            className="text-[#3498db] hover:underline"
+          >
+            Đăng kí tài khoản
+          </a>
+        </p>
+        </div>
       </form>
     </div>
   );

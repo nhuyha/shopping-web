@@ -170,7 +170,7 @@ function MainComponent() {
       alert("Failed to create order");
     }
   };
-
+ 
   const noProductsMessage = search && filteredProducts.length === 0 ? (
     <p>
       <Localized id="noProductsFound">No products found.</Localized>
@@ -178,14 +178,14 @@ function MainComponent() {
   ) : null;
 
   return (
-    <div className="w-full min-h-screen bg-[#f0f0f0] font-roboto">
-      <header className="flex items-center justify-between bg-[#1a73e8] p-4 text-white">
-        <h1 className="text-3xl cursor-pointer" onClick={handleTitleClick}>
+    <div className="w-full min-h-screen bg-white text-black font-roboto">
+      <header className="flex items-center justify-between bg-white p-4 shadow-md">
+        <h1 className="text-3xl cursor-pointer font-sans" onClick={handleTitleClick}>
           Online Marketplace
         </h1>
         <div className="w-[300px]">
           <input
-            className="w-full p-2 rounded text-black bg-white"
+            className="w-full p-2 rounded text-black bg-white border border-gray-300 font-sans"
             type="search"
             name="searchProduct"
             placeholder={localization.l10n.getString("search-products")}
@@ -195,20 +195,20 @@ function MainComponent() {
         </div>
         <button className="relative text-xl" onClick={handleCartClick}>
           🛒
-          <span className="absolute top-0 right-0 rounded-full bg-[#ff0000] px-2 text-sm">
+          <span className="absolute top-0 right-0 rounded-full bg-gray-200 px-2 text-sm text-black">
             {cart.reduce((count, product) => count + product.quantity, 0)}
           </span>
         </button>
-        <button className="relative text-xl" onClick={handleClick}>
-        <Localized id="Language"></Localized>
-          </button>
-        <button className="relative text-xl" onClick={handleProfileClick}>
-        <Localized id="Account"></Localized>
+        <button className="relative text-xl ml-4" onClick={handleClick}>
+          <Localized id="Language"></Localized>
+        </button>
+        <button className="relative text-xl ml-4" onClick={handleProfileClick}>
+          👤
         </button>
       </header>
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {showCart ? (
-          <div className="col-span-full bg-white p-4">
+          <div className="col-span-full bg-white p-4 shadow-md">
             <h2 className="text-lg font-semibold mb-4">
               <Localized id="cart-items"></Localized>
             </h2>
@@ -221,19 +221,27 @@ function MainComponent() {
                   </div>
                   <div>
                     <span>
-                      <Localized id="quantity"></Localized>: 
-                    <button onClick={() => adjustQuantity(item.id, item.quantity - 1)}>
-                      -</button>{item.quantity}
-                    <button onClick={() => adjustQuantity(item.id, item.quantity + 1)}>+</button>
+                      <Localized id="quantity"></Localized>:
+                      <button className="mx-2" onClick={() => adjustQuantity(item.id, item.quantity - 1)}>
+                        -
+                      </button>
+                      {item.quantity}
+                      <button className="mx-2" onClick={() => adjustQuantity(item.id, item.quantity + 1)}>
+                        +
+                      </button>
                     </span>
-                    
-                    <button onClick={() => removeFromCart(item.id)}> <Localized id="remove"></Localized></button>
+                    <button className="ml-4" onClick={() => removeFromCart(item.id)}>
+                      <Localized id="remove"></Localized>
+                    </button>
                   </div>
                 </li>
               ))}
               {cart.length === 0 && <li><Localized id="your-cart-is-empty"></Localized></li>}
             </ul>
-            <button onClick={createOrder} className="bg-[#ff9800] text-white rounded px-6 py-2 hover:bg-[#f57c00] active:bg-[#ef6c00] transition duration-150 ease-in-out">
+            <button
+              onClick={createOrder}
+              className="mt-4 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
+            >
               <Localized id="checkout"></Localized>
             </button>
           </div>
@@ -242,15 +250,17 @@ function MainComponent() {
             {noProductsMessage}
             {filteredProducts.map((product) => (
               <div key={product.id} className="bg-white rounded overflow-hidden shadow-lg">
+                
                 <img src={product.image_url} alt={product.name} className="w-full h-[200px] object-cover" />
                 <div className="p-4">
-                  <h5 className="text-lg text-[#333] mb-2">{product.name}</h5>
-                  <p className="text-xl text-[#121212]">
+                  
+                  <h5 className="text-lg text-black mb-2">{product.name}</h5>
+                  <p className="text-xl text-gray-700">
                     ${product.price}
                   </p>
                   <button
                     onClick={() => addToCart(product)}
-                    className="mt-3 bg-[#4caf50] text-white rounded px-6 py-2 hover:bg-[#45a045] active:bg-[#43a047] transition duration-150 ease-in-out"
+                    className="mt-3 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
                   >
                     <Localized id="add-to-cart"></Localized>
                   </button>
@@ -265,3 +275,4 @@ function MainComponent() {
 }
 
 export default MainComponent;
+

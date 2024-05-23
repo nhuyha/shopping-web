@@ -167,41 +167,24 @@ function MainComponent() {
   };
 
   return (
-    <div className="p-4">
-      <header className="flex items-center justify-between bg-[#1a73e8] p-4 text-white">
-        <h1 className="text-3xl cursor-pointer" onClick={handleTitleClick}>
+    <div className="w-full min-h-screen bg-white text-black font-roboto">
+      <header className="flex items-center justify-between bg-white p-4 shadow-md">
+        <h1 className="text-3xl cursor-pointer font-sans" onClick={handleTitleClick}>
           Online Marketplace
         </h1>
         <button
-          className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded"
+          className="mt-3 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
           onClick={handleLogout}
         >
           <Localized id="logout"></Localized>
         </button>
       </header>
 
-      <div>
+      <div className="flex justify-center mt-8">
         <h1 className="text-[#121212] font-roboto text-2xl">
         <Localized id="Profile"></Localized>
           
-        </h1>
-        {/* Display customer information if available */}
-        
-
-        {/* Buttons to trigger password and profile changes */}
-        <button
-          className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded mb-4"
-          onClick={changePasswordClick}  // Example structure, update as needed
-        >
-          <Localized id="ChangePassword"></Localized>
-        </button>
-          
-        <button
-          className="bg-[#007BFF] text-white px-4 py-2 font-roboto rounded"
-          onClick={changeProfileClick}  // Example structure, update as needed
-        >
-          <Localized id="ChangeProfile"></Localized>
-        </button>
+        </h1>        
       </div>
       <main className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {changePassword && (
@@ -248,7 +231,7 @@ function MainComponent() {
               <div className="flex items-center justify-between">
               <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="mt-3 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
               >
               <Localized id="submit"></Localized>
               </button>
@@ -288,7 +271,23 @@ function MainComponent() {
               </label>
               <div className="font-roboto text-[#333]">{customer.PhoneNumber}</div>
             </div>
+            <div className="mt-8">
+              <button
+                  className="mt-3 mx-6 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
+                  onClick={changePasswordClick}  // Example structure, update as needed
+                >
+                  <Localized id="ChangePassword"></Localized>
+                </button>
+                  
+                <button
+                  className="mt-3 mx-6 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
+                  onClick={changeProfileClick}  // Example structure, update as needed
+                >
+                  <Localized id="ChangeProfile"></Localized>
+              </button>
+            </div>
             </>
+            
           )}
           </>
 
@@ -370,7 +369,7 @@ function MainComponent() {
             <div className="flex items-center justify-between">
             <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="mt-3 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
             >
             <Localized id="submit"></Localized>
             </button>
@@ -379,7 +378,9 @@ function MainComponent() {
           </div>
         )}
       </main>
+        
     </div>
+    
   )
 }
 export default MainComponent;

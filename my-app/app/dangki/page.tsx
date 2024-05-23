@@ -160,6 +160,18 @@ function MainComponent() {
             Register
           </button>
         </div>
+        <div>
+        <p className="text-center">
+          Bạn đã có tài khoản?{" "}
+          <a
+            href="#"
+            onClick={() => Router.push("/login")}
+            className="text-[#3498db] hover:underline"
+          >
+            Đăng nhập
+          </a>
+        </p>
+        </div>
       </form>
     </div>
   );
