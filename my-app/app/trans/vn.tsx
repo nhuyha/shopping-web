@@ -4,7 +4,6 @@ add-to-cart = Thêm vào giỏ hàng
 view-cart = Xem giỏ hàng
 cart-items = Các mặt hàng trong giỏ hàng
 your-cart-is-empty = Giỏ hàng của bạn đang trống.
-online-marketplace = Chợ trực tuyến
 cart = Giỏ hàng
 cart-notification-count = {NUMBER($count)} sản phẩm
 checkout = Thanh toán
@@ -45,4 +44,6 @@ ChangeProfile = Thay đổi thông tin cá nhân
 Enter-password=Nhập mật khẩu
 Enter-username=Nhập tên đăng nhập
 Login=Đăng nhập
+Back=Quay lại
+total=Tổng
 `

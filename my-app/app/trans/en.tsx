@@ -4,7 +4,6 @@ add-to-cart = Add to Cart
 view-cart = View Cart
 cart-items = Cart Items
 your-cart-is-empty = Your cart is empty.
-online-marketplace = Online Marketplace
 cart = Cart
 cart-notification-count = {NUMBER($count)} items
 checkout = Checkout
@@ -49,4 +48,6 @@ OldPassword=Old Password
 Enter-OldPassword=Enter Old Password
 NewPassword=New Password
 Enter-newpassword=Enter New Password
+Back=Back
+total=Total
 `

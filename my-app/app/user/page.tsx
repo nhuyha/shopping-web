@@ -170,7 +170,7 @@ function MainComponent() {
     <div className="w-full min-h-screen bg-white text-black font-roboto">
       <header className="flex items-center justify-between bg-white p-4 shadow-md">
         <h1 className="text-3xl cursor-pointer font-sans" onClick={handleTitleClick}>
-          Online Marketplace
+          Online Bookstore
         </h1>
         <button
           className="mt-3 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"

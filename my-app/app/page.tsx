@@ -103,7 +103,9 @@ function MainComponent() {
     const updatedCart = cart.filter((item) => item.id !== productId);
     setCart(updatedCart);
   };
-
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => (total + item.price * item.quantity), 0);
+  };
   const adjustQuantity = (productId: number, newQuantity: number) => {
     if (newQuantity === 0) {
       removeFromCart(productId);
@@ -185,7 +187,7 @@ function MainComponent() {
     <div className="w-full min-h-screen bg-white text-black font-roboto">
       <header className="flex items-center justify-between bg-white p-4 shadow-md">
         <h1 className="text-3xl cursor-pointer font-sans" onClick={handleTitleClick}>
-          Online Marketplace
+          Online Bookstore
         </h1>
         <div className="w-[300px]">
           <input
@@ -217,7 +219,7 @@ function MainComponent() {
             onClick={() => setSelectedProduct(null)}
             className="text-[#010101] mb-4 font-bold"
           >
-            &#x2190; Back to products
+            &#x2190; <Localized id="Back"></Localized>
           </button>
           <img
             src={selectedProduct.image_url}
@@ -250,7 +252,7 @@ function MainComponent() {
                 <li key={item.id} className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <img src={item.image_url} alt={item.name} className="w-10 h-30 object-cover" />
-                    <span>{item.name}</span>
+                    <span>BOOK: {item.name}</span>
                   </div>
                   <div>
                     <span>
@@ -271,12 +273,20 @@ function MainComponent() {
               ))}
               {cart.length === 0 && <li><Localized id="your-cart-is-empty"></Localized></li>}
             </ul>
-            <button
-              onClick={createOrder}
-              className="mt-4 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
-            >
-              <Localized id="checkout"></Localized>
-            </button>
+            {cart.length > 0 && (
+              <div className="mt-4">
+                <div className="flex justify-between">
+                  <span className="text-lg font-semibold"><Localized id="total"></Localized>:</span>
+                  <span className="text-lg font-semibold">{calculateTotal()} VND</span>
+                </div>
+                <button
+                  onClick={createOrder}
+                  className="mt-4 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
+                >
+                  <Localized id="checkout"></Localized>
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <>
