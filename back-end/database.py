@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 from datetime import datetime
 # Kết nối đến cơ sở dữ liệu SQLite (nếu tệp không tồn tại, nó sẽ được tạo ra tự động)
-conn = sqlite3.connect('shopping.db',check_same_thread=False)
+conn = sqlite3.connect('shopping.db')
 cursor = conn.cursor()
 
 # Tạo bảng Sản phẩm (Products)
@@ -13,7 +13,6 @@ cursor.execute('''
         Image TEXT,
         Description TEXT,
         Price DECIMAL(10, 2) NOT NULL,
-        StockQuantity INTEGER,
         DELETED INTEGER
     )
 ''')
@@ -100,7 +99,6 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Ratings (
     CustomerID INTEGER NOT NULL,
     ProductID INTEGER NOT NULL,
     Rating INTEGER NOT NULL CHECK (Rating >= 1 AND Rating <= 5),
-    Review TEXT,
     RatingDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
