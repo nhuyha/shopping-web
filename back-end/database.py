@@ -113,7 +113,20 @@ cursor.execute('''
 CREATE INDEX IF NOT EXISTS abc
 ON Cart (CustomerID, ProductID)''')
 conn.commit()
+def khach_hang_danh_gia_san_pham(CustomerID,ProductID, rating):
 
+    # Thực thi truy vấn SQL để chèn sản phẩm mới vào bảng Sản phẩm (Products)
+    cursor.execute('''
+        INSERT INTO Ratings (CustomerID,ProductID, rating)
+        VALUES (?, ?, ?)
+    ''', (CustomerID,ProductID, rating))
+
+    # Lấy khóa chính của sản phẩm vừa được thêm vào
+    product_id = cursor.lastrowid
+    # Lưu các thay đổi vào cơ sở dữ liệu và đóng kết nối
+    conn.commit()
+
+    return product_id
 def them_san_pham(ten,anh, mo_ta, gia):
 
     # Thực thi truy vấn SQL để chèn sản phẩm mới vào bảng Sản phẩm (Products)
