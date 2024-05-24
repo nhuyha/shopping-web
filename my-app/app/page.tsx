@@ -235,7 +235,7 @@ function MainComponent() {
             onClick={()=>addToCart(selectedProduct)}
             className="bg-[#010101] text-white px-4 py-2 rounded"
           >
-            Add to Cart
+           <Localized id="add-to-cart"></Localized>
           </button>
         </div>
       ) :(
