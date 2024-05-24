@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 from datetime import datetime
 # Kết nối đến cơ sở dữ liệu SQLite (nếu tệp không tồn tại, nó sẽ được tạo ra tự động)
-conn = sqlite3.connect('shopping.db')
+conn = sqlite3.connect('shopping.db',check_same_thread=False)
 cursor = conn.cursor()
 
 # Tạo bảng Sản phẩm (Products)
