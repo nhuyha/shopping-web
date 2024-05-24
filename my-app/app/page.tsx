@@ -222,7 +222,7 @@ function MainComponent() {
           <img
             src={selectedProduct.image_url}
             alt={selectedProduct.name}
-            className="w-full h-[300px] object-cover mb-4 rounded"
+            className="w-[200px] h-[300px] object-cover mb-4 rounded"
           />
           <h2 className="text-3xl font-semibold mb-2">
             {selectedProduct.name}
@@ -249,7 +249,7 @@ function MainComponent() {
               {cart.map((item) => (
                 <li key={item.id} className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <img src={item.image_url} alt={item.name} className="w-20 h-20 object-cover" />
+                    <img src={item.image_url} alt={item.name} className="w-10 h-30 object-cover" />
                     <span>{item.name}</span>
                   </div>
                   <div>
@@ -290,11 +290,11 @@ function MainComponent() {
               <img
                 src={product.image_url}
                 alt={product.name}
-                className="w-full h-[200px] object-cover"
+                className="w-[120px] h-[200px] object-cover"
               />
               <div className="p-4">
-                <h5 className="text-lg text-black mb-2">{product.name}</h5>
-                <p className="text-xl text-gray-700">${product.price}</p>
+                <h5 className="text-lg text-black mb-2">BOOK: {product.name}</h5>
+                <p className="text-xl text-gray-700">{product.price} VND </p>
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent the click from bubbling up to the div
