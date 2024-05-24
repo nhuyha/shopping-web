@@ -446,6 +446,13 @@ def danh_sach_token():
    result=cursor.fetchall()
    return result
 
+def danh_sach_rating():
+    cursor.execute('''
+        SELECT * FROM Ratings
+                   ''',)
+    result=cursor.fetchall()
+    return result
+
 def thong_tin_don_hang(OrderID,customerId):
     cursor.execute('''
     SELECT TotalAmount,Status, Paid

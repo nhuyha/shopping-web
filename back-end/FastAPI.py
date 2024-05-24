@@ -335,3 +335,6 @@ def vnp(vnp_Amount,vnp_BankCode,vnp_BankTranNo,vnp_CardType,vnp_OrderInfo,vnp_Pa
     print("No Success")
     return({'RspCode': '04', 'Message': 'invalid amount'})           
         
+@app2.get("/danh_sach_rating")
+def danh_sach_rating():
+    return database.danh_sach_rating()
