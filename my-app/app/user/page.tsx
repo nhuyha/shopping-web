@@ -91,6 +91,15 @@ function MainComponent() {
           throw new Error("Profile change failed");
         }
         alert("Profile changed successfully!");
+        setCustomer({
+          'CustomerID': customer!.CustomerID,
+          'CustomerName': CustomerName,
+          'username': customer!.username,
+          'password': customer!.password,
+          'Email': Email,
+          'Address': Address,
+          'PhoneNumber': PhoneNumber
+        })
         setChangeProfile(false)
         setShowProfile(true)
       } catch (error) {
