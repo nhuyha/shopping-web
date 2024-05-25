@@ -357,14 +357,19 @@ def danh_sach_sp_da_mua(token:Annotated[str, Depends(oauth2_scheme)]):
 
 import sys
  
-sys.path.insert(0, 'D:/1/UET/H/OODA/Project/shopping-web/recommenderSystem')
-
 from Recommendation3 import combine_recommendations
 
 @app.get("/danh_sach_san_pham_goi_y")
 def danh_sach_san_pham_goi_y(CustomerID:int):
-    return combine_recommendations(CustomerID)
+     danh_sach=combine_recommendations(CustomerID)
+     list=[]
+     for ProductID in danh_sach:
+         row=database.san_pham(ProductID)
+         list.append(Product(id=row[0], name=row[1],
+         image_url=row[2], detail=row[3], price=row[4]))
+
+     return list
 # def danh_sach_san_pham_goi_y(token:Annotated[str, Depends(oauth2_scheme)]):
-#     CustomerID=database.khach_hang_token(token)
-#     return combine_recommendations(CustomerID)
+#      CustomerID=database.khach_hang_token(token)
+#      return combine_recommendations(CustomerID)
 

@@ -111,6 +111,8 @@ cursor.execute('''
 CREATE INDEX IF NOT EXISTS abc
 ON Cart (CustomerID, ProductID)''')
 conn.commit()
+
+
 def khach_hang_danh_gia_san_pham(CustomerID,ProductID, rating):
 
     # Thực thi truy vấn SQL để chèn sản phẩm mới vào bảng Sản phẩm (Products)
@@ -491,4 +493,12 @@ def cap_nhat_thanh_toan(OrderID):
     WHERE OrderID = ?
     ''', (1,OrderID,))
     conn.commit()
-    
+
+def san_pham(ProductID):
+    cursor.execute('''
+    SELECT *
+    FROM Products 
+    WHERE ProductID = ?
+    ''', (ProductID,))
+    rows = cursor.fetchall()
+    return rows[0]
