@@ -274,7 +274,7 @@ function MainComponent() {
               />
               <p><Localized id="name"></Localized>: {product.name}</p>
               <p><Localized id="product-detail"></Localized>: {product.detail}</p>
-              <p><Localized id="price">Price</Localized>: ${product.price}</p>
+              <p><Localized id="price">Price</Localized>: {product.price} VND</p>
               <button
                 className="text-red-500"
                 onClick={() => deleteProduct(product.id)}
@@ -330,7 +330,7 @@ function MainComponent() {
               onClick={() => handleOrderSelection(order)}
             >
               <p><Localized id="order-id"></Localized>: {order.order_id}</p>
-              <p><Localized id="total-order-price"></Localized>: $ {order.total_amount}</p>
+              <p><Localized id="total-order-price"></Localized>:  {order.total_amount} VND</p>
               <p><Localized id="status"></Localized>: {order.status}</p>
             </div>
           ))}
@@ -367,14 +367,14 @@ function MainComponent() {
                   </p>
                   <p>
                     <Localized id="price-per-item"></Localized>:{" "}
-                    <span className="font-semibold">${OrderDetail.price}</span>
+                    <span className="font-semibold">{OrderDetail.price} VND</span>
                   </p>
                 </div>
               ))}
               <p>
                 <Localized id="total-order-price">e</Localized>:{" "}
                 <span className="font-semibold">
-                  ${selectedOrder.total_amount}
+                  {selectedOrder.total_amount} VND
                 </span>
               </p>
               <button

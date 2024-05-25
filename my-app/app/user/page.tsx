@@ -174,7 +174,9 @@ function MainComponent() {
   const handleTitleClick = () => {
     Router.push("/");
   };
-
+  const handleRatingClick = () => {
+    Router.push("/rating");
+  };
   return (
     <div className="w-full min-h-screen bg-white text-black font-roboto">
       <header className="flex items-center justify-between bg-white p-4 shadow-md">
@@ -294,6 +296,12 @@ function MainComponent() {
                 >
                   <Localized id="ChangeProfile"></Localized>
               </button>
+              <button
+                  className="mt-3 mx-6 bg-gray-800 text-white rounded px-6 py-2 hover:bg-gray-700 active:bg-gray-900 transition duration-150 ease-in-out"
+                  onClick={handleRatingClick}  // Example structure, update as needed
+                >
+                  <Localized id="Sản phẩm đã mua"></Localized>
+                </button>
             </div>
             </>
             

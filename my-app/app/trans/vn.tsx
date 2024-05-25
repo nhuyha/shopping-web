@@ -44,6 +44,11 @@ ChangeProfile = Thay đổi thông tin cá nhân
 Enter-password=Nhập mật khẩu
 Enter-username=Nhập tên đăng nhập
 Login=Đăng nhập
+OldPassword=Mật khẩu cũ
+Enter-OldPassword=Nhập mật khẩu cũ
+NewPassword=Mật khẩu mới
+Enter-newpassword=Nhập mật khẩu mới
 Back=Quay lại
 total=Tổng
+detail=Mô tả
 `

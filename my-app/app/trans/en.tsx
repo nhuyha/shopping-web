@@ -50,4 +50,5 @@ NewPassword=New Password
 Enter-newpassword=Enter New Password
 Back=Back
 total=Total
+detail= Detail
 `

@@ -229,10 +229,10 @@ function MainComponent() {
           <h2 className="text-3xl font-semibold mb-2">
             {selectedProduct.name}
           </h2>
-          <p className="text-[#121212] mb-2">$ {selectedProduct.price}</p>
-          {/* <p className="text-gray-700 text-md mb-4">
-            {selectedProduct.description}
-          </p> */}
+          <p className="text-[#121212] mb-2">{selectedProduct.price} VND</p>
+          <p className="text-gray-700 text-md mb-4">
+            {selectedProduct.detail}
+          </p>
           <button
             onClick={()=>addToCart(selectedProduct)}
             className="bg-[#010101] text-white px-4 py-2 rounded"
@@ -277,7 +277,7 @@ function MainComponent() {
               <div className="mt-4">
                 <div className="flex justify-between">
                   <span className="text-lg font-semibold"><Localized id="total"></Localized>:</span>
-                  <span className="text-lg font-semibold">$ {calculateTotal()}</span>
+                  <span className="text-lg font-semibold"> {calculateTotal()} VND</span>
                 </div>
                 <button
                   onClick={createOrder}
@@ -304,7 +304,7 @@ function MainComponent() {
               />
               <div className="p-4">
                 <h5 className="text-lg text-black mb-2">BOOK: {product.name}</h5>
-                <p className="text-xl text-gray-700">$ {product.price} </p>
+                <p className="text-xl text-gray-700"> {product.price} VND </p>
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent the click from bubbling up to the div
