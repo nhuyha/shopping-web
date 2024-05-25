@@ -5,10 +5,12 @@ from sklearn.metrics.pairwise import linear_kernel
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import svds
 
-def combine_recommendations(user_id, books, ratings, n_content=5, n_collab=5):
+def combine_recommendations(user_id, n_content=5, n_collab=5):
+    books_csv_path = 'recommender-system/books.csv'
+    ratings_csv_path = 'recommender-system/rating.csv'
     # Đọc dữ liệu từ CSV
-    books_df = pd.read_csv(books)
-    ratings_df = pd.read_csv(ratings)
+    books_df = pd.read_csv(books_csv_path)
+    ratings_df = pd.read_csv(ratings_csv_path)
 
     # Loại bỏ các mục trùng lặp bằng cách lấy trung bình các đánh giá
     ratings_df = ratings_df.groupby(['user_id', 'Book_id']).rating.mean().reset_index()
@@ -62,8 +64,8 @@ def combine_recommendations(user_id, books, ratings, n_content=5, n_collab=5):
     return combined_recs['Book_id'].tolist()
 
 # Đường dẫn đến các tệp CSV
-books_csv_path = 'books.csv'
-ratings_csv_path = 'rating.csv'
+books_csv_path = 'recommender-system/books.csv'
+ratings_csv_path = 'recommender-system/rating.csv'
 
 # Ví dụ sử dụng hàm
 user_id = 1
