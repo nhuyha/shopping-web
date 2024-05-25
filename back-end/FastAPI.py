@@ -12,7 +12,13 @@ from urllib.parse import urlencode
 import database
 from dotenv import load_dotenv
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
+class detail_order:
+    def __init__(self, id: int, name: str, image_url: str, price: float,Quantity:int):
+        self.id = id
+        self.name = name
+        self.image_url = image_url
+        self.price = price
+        self.Quantity=Quantity
 class Product:
     def __init__(self, id: int, name: str, image_url: str, detail: str, price: float):
         self.id = id
@@ -338,3 +344,13 @@ def vnp(vnp_Amount,vnp_BankCode,vnp_BankTranNo,vnp_CardType,vnp_OrderInfo,vnp_Pa
 @app2.get("/danh_sach_rating")
 def danh_sach_rating():
     return database.danh_sach_rating()
+
+@app.get("/danh_sach_sp_da_mua")
+def danh_sach_sp_da_mua(token:Annotated[str, Depends(oauth2_scheme)]):
+    CustomerID=database.khach_hang_token(token)
+    products=database.danh_sach_sp_da_mua(CustomerID)
+    danh_sach=[]
+    for row in products:
+        danh_sach.append(detail_order(row[0],row[1],row[2],row[3],row[4]))
+
+    return danh_sach

@@ -139,7 +139,22 @@ def them_san_pham(ten,anh, mo_ta, gia):
     conn.commit()
 
     return product_id
-
+def danh_sach_sp_da_mua(customer_id):
+    cursor.execute('''
+        SELECT p.ProductID, p.Name, p.Image, p.Price, od.Quantity
+        FROM Orders o
+        JOIN OrderDetails od ON o.OrderID = od.OrderID
+        JOIN Products p ON od.ProductID = p.ProductID
+        WHERE o.CustomerID = ? AND o.Paid=1
+    ''', (customer_id,))
+    
+    products = cursor.fetchall()
+    
+    if not products:
+        return None
+    else:
+        return products
+    
 def xoa_san_pham(product_id):
     # Thực thi truy vấn SQL để cập nhật cờ Deleted của sản phẩm dựa trên ProductID
     cursor.execute('''
@@ -311,7 +326,7 @@ def danh_sach_san_pham():
 
 def danh_sach_don_hang():
     cursor.execute('''
-    SELECT o.OrderID, o.TotalAmount, o.Status,o.Paid
+    SELECT o.OrderID, o.TotalAmount, o.Status,o.Paid,
      c.CustomerName, c.Address, c.PhoneNumber, od.ProductID, od.Quantity, p.Price
     FROM Orders o
     JOIN Customers c ON o.CustomerID = c.CustomerID
